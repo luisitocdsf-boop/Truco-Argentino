@@ -358,3 +358,29 @@ h1 span { color: var(--gold); }
   overflow-x: auto;
   padding: 8px 4px 14px;
 }
+/* Números en las dos esquinas */
+#cardsArea .play-card {
+  position: relative !important;
+  justify-content: center !important;
+}
+
+#cardsArea .play-card .top-number {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 25px !important;
+  font-weight: 900;
+}
+
+#cardsArea .play-card .bottom-number {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  font-size: 25px !important;
+  font-weight: 900;
+  transform: rotate(180deg);
+}
+
+#cardsArea .play-card .card-symbol {
+  font-size: 65px !important;
+}
