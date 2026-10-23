@@ -130,6 +130,28 @@ $$("[data-mode]").forEach(button => button.addEventListener("click", () => {
 $("#createRoom").addEventListener("click", createRoom);
 $("#joinRoom").addEventListener("click", joinRoom);
 $("#publicMatch").addEventListener("click", publicMatch);
+
+$("#playVsMachine").addEventListener("click", startMachineGame);
+
+function startMachineGame() {
+  showDetail(
+    "PARTIDA CONTRA LA MÁQUINA",
+    "¡A jugar al truco!",
+    "Modo 1 contra 1 · Dificultad normal",
+    `
+      <div class="detail-panel" style="text-align:center">
+        <p>La partida se está preparando.</p>
+        <p class="helper">En el próximo paso agregaremos la baraja, el reparto de cartas y las jugadas.</p>
+        <button class="primary-button" id="dealCardsButton">Repartir cartas</button>
+      </div>
+    `
+  );
+
+  $("#dealCardsButton").addEventListener("click", () => {
+    showToast("¡Ya podemos preparar el reparto de cartas!");
+  });
+}
+
 $("#backButton").addEventListener("click", showPlay);
 $("#backLink").addEventListener("click", showPlay);
 $("#profileButton").addEventListener("click", () => showToast("El perfil y el registro se implementarán en la siguiente etapa."));
