@@ -178,15 +178,14 @@ function startMachineGame() {
     }
 
     
+
 $("#cardsArea").innerHTML = `
   <h3 style="margin-top:24px">Tus cartas</h3>
   <div class="chip-row">
     ${jugador.map((carta, i) => `
-      <button
-        class="detail-panel play-card"
+      <button class="detail-panel play-card"
         data-card="${i}"
-        style="flex:1;text-align:center;padding:12px;color:inherit;cursor:pointer"
-      >
+        style="flex:1;text-align:center;padding:12px;color:inherit;cursor:pointer">
         <strong>${nombreCarta(carta)}</strong>
         <p class="helper">Tocar para jugar</p>
       </button>
@@ -201,16 +200,13 @@ $("#cardsArea").innerHTML = `
   <h3 style="margin-top:24px">La máquina</h3>
   <div class="chip-row">
     ${maquina.map(() => `
-      <div class="detail-panel" style="flex:1;text-align:center;padding:18px">
-        🂠
-      </div>
+      <div class="detail-panel" style="flex:1;text-align:center;padding:18px">🂠</div>
     `).join("")}
   </div>
 
-  <p class="helper">Estamos preparando las jugadas. Todavía no se comparan los puntos.</p>
+  <p class="helper">Partida de prueba: todavía no se comparan los puntos.</p>
   <button class="primary-button" id="newDealButton">Repartir de nuevo</button>
 `;
-
 
 let turnoMaquina = 0;
 const cartasMesa = [];
@@ -222,11 +218,7 @@ document.querySelectorAll(".play-card").forEach(boton => {
 
     if (!carta) return;
 
-    cartasMesa.push({
-      nombre: nombreCarta(carta),
-      jugador: "Vos"
-    });
-
+    cartasMesa.push({ nombre: nombreCarta(carta), jugador: "Vos" });
     jugador[indice] = null;
     boton.disabled = true;
     boton.style.opacity = "0.4";
@@ -238,7 +230,6 @@ document.querySelectorAll(".play-card").forEach(boton => {
         nombre: nombreCarta(cartaMaquina),
         jugador: "Máquina"
       });
-
       turnoMaquina++;
     }
 
@@ -252,6 +243,12 @@ document.querySelectorAll(".play-card").forEach(boton => {
   });
 });
 
+$("#dealCardsButton").hidden = true;
+
+$("#newDealButton").addEventListener("click", () => {
+  startMachineGame();
+  $("#dealCardsButton").click();
+});
 
 
     $("#dealCardsButton").hidden = true;
