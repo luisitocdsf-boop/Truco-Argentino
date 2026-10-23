@@ -203,7 +203,8 @@ $("#cardsArea").innerHTML = `
       <button class="detail-panel play-card"
         data-card="${i}"
         style="flex:1;text-align:center;padding:12px;color:inherit;cursor:pointer">
-        <span class="card-number">${carta.valor}</span>
+        <span class="card-number top-number">${carta.valor}</span>
+<span class="card-number bottom-number">${carta.valor}</span>
         <span class="card-symbol">${
           carta.palo === "Espada" ? "⚔" :
           carta.palo === "Basto" ? "🪵" :
