@@ -167,15 +167,31 @@ function startMachineGame() {
     const jugador = baraja.slice(0, 3);
     const maquina = baraja.slice(3, 6);
 
-    function nombreCarta(carta) {
-      const nombres = {
-        1: "As",
-        10: "Sota",
-        11: "Caballo",
-        12: "Rey"
-      };
-      return `${nombres[carta.valor] || carta.valor} de ${carta.palo}`;
-    }
+    
+function nombreCarta(carta) {
+  const nombres = {
+    1: "As",
+    2: "2",
+    3: "3",
+    4: "4",
+    5: "5",
+    6: "6",
+    7: "7",
+    10: "Sota",
+    11: "Caballo",
+    12: "Rey"
+  };
+
+  const palos = {
+    Espada: "⚔️",
+    Basto: "🪵",
+    Oro: "🪙",
+    Copa: "🏆"
+  };
+
+  return `${nombres[carta.valor] || carta.valor} ${palos[carta.palo] || carta.palo} de ${carta.palo}`;
+}
+
 
     
 
