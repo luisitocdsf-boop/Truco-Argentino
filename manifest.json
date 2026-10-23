@@ -1,0 +1,16 @@
+{
+  "id": "./",
+  "name": "Truco Argentino",
+  "short_name": "Truco Argentino",
+  "description": "Jugá al truco argentino con amigos.",
+  "lang": "es-AR",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#101010",
+  "theme_color": "#111111",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
