@@ -210,3 +210,63 @@ h1 span { color: var(--gold); }
   .score-number { font-size: 38px; }
   .matchsticks { gap: 10px 2px; }
 }
+/* Cartas de la partida */
+.play-card {
+  position: relative;
+  min-height: 145px;
+  min-width: 85px;
+  background: linear-gradient(145deg, #fffef7, #eee5ce) !important;
+  color: #211b15 !important;
+  border: 2px solid #c4a45c !important;
+  border-radius: 12px !important;
+  box-shadow: 0 5px 12px #0006;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.play-card strong {
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.play-card .helper {
+  color: #75664e;
+  font-size: 11px;
+  margin: 0;
+}
+
+.play-card:active:not(:disabled) {
+  transform: translateY(-5px);
+}
+
+.play-card:disabled {
+  opacity: 0.4;
+  box-shadow: none;
+}
+
+#tableArea {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 10px;
+}
+
+#tableArea .detail-panel {
+  flex: 1 1 100px;
+  min-width: 95px;
+  background: linear-gradient(145deg, #fffef7, #eee5ce);
+  color: #211b15;
+  border: 1px solid #c4a45c;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px #0004;
+  overflow-wrap: anywhere;
+}
+
+#tableArea .helper {
+  color: #75664e;
+  font-size: 12px;
+}
