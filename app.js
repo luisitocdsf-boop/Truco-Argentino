@@ -211,6 +211,10 @@ $("#cardsArea").innerHTML = `
   <button class="primary-button" id="newDealButton">Repartir de nuevo</button>
 `;
 
+
+let turnoMaquina = 0;
+const cartasMesa = [];
+
 document.querySelectorAll(".play-card").forEach(boton => {
   boton.addEventListener("click", () => {
     const indice = Number(boton.dataset.card);
@@ -218,18 +222,36 @@ document.querySelectorAll(".play-card").forEach(boton => {
 
     if (!carta) return;
 
-    $("#tableArea").innerHTML = `
-      <div class="detail-panel" style="text-align:center;padding:16px">
-        <strong>${nombreCarta(carta)}</strong>
-        <p class="helper">Tu carta jugada</p>
-      </div>
-    `;
+    cartasMesa.push({
+      nombre: nombreCarta(carta),
+      jugador: "Vos"
+    });
 
     jugador[indice] = null;
     boton.disabled = true;
     boton.style.opacity = "0.4";
+
+    const cartaMaquina = maquina[turnoMaquina];
+
+    if (cartaMaquina) {
+      cartasMesa.push({
+        nombre: nombreCarta(cartaMaquina),
+        jugador: "Máquina"
+      });
+
+      turnoMaquina++;
+    }
+
+    $("#tableArea").innerHTML = cartasMesa.map((c, i) => `
+      <div class="detail-panel" style="flex:1;text-align:center;padding:12px">
+        <strong>${c.nombre}</strong>
+        <p class="helper">${c.jugador}</p>
+        <p class="helper">Ronda ${Math.floor(i / 2) + 1}</p>
+      </div>
+    `).join("");
   });
 });
+
 
 
     $("#dealCardsButton").hidden = true;
