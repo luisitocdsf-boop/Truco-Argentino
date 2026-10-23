@@ -193,6 +193,40 @@ function nombreCarta(carta) {
 }
 
 
+function dibujoPalo(palo) {
+  const dibujos = {
+    Espada: `
+      <svg viewBox="0 0 60 100" class="palo-svg">
+        <path d="M30 4 L39 52 L30 65 L21 52 Z" fill="#d9e4ef" stroke="#333" stroke-width="2"/>
+        <path d="M20 55 L40 55 M30 58 L30 84" fill="none" stroke="#9b6b32" stroke-width="5" stroke-linecap="round"/>
+        <path d="M22 85 L38 85" stroke="#333" stroke-width="4" stroke-linecap="round"/>
+      </svg>`,
+    Basto: `
+      <svg viewBox="0 0 60 100" class="palo-svg">
+        <path d="M30 94 L30 48 Q18 42 16 27 Q27 28 30 42 Q33 22 44 15 Q47 33 34 49 L30 94"
+          fill="#4f7b3a" stroke="#294b25" stroke-width="3" stroke-linejoin="round"/>
+        <path d="M30 69 L22 57 M30 57 L37 46" fill="none" stroke="#294b25" stroke-width="3"/>
+      </svg>`,
+    Oro: `
+      <svg viewBox="0 0 60 100" class="palo-svg">
+        <ellipse cx="30" cy="50" rx="22" ry="29" fill="#e5ad24" stroke="#8d6412" stroke-width="4"/>
+        <ellipse cx="30" cy="50" rx="16" ry="23" fill="none" stroke="#ffdf70" stroke-width="3"/>
+        <path d="M30 35 L30 65 M22 42 L38 58 M38 42 L22 58"
+          stroke="#a7750c" stroke-width="3" stroke-linecap="round"/>
+      </svg>`,
+    Copa: `
+      <svg viewBox="0 0 60 100" class="palo-svg">
+        <path d="M15 22 L45 22 L41 43 Q38 54 30 58 Q22 54 19 43 Z"
+          fill="#d84b42" stroke="#8b2925" stroke-width="3"/>
+        <path d="M30 58 L30 77 M20 80 L40 80"
+          fill="none" stroke="#8b2925" stroke-width="5" stroke-linecap="round"/>
+        <path d="M20 28 L24 42" stroke="#ffb5a8" stroke-width="3" stroke-linecap="round"/>
+      </svg>`
+  };
+
+  return dibujos[palo] || "";
+}
+
     
 
 
