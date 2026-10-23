@@ -314,3 +314,47 @@ h1 span { color: var(--gold); }
   font-size: 10px;
   margin: 4px 0 0;
 }
+/* Cartas españolas más grandes */
+.play-card {
+  min-width: 125px !important;
+  min-height: 205px !important;
+  flex: 0 0 125px !important;
+  padding: 12px 10px !important;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, #fffdf5, #eee1c2) !important;
+  color: #241b10 !important;
+  border: 2px solid #c4a45c !important;
+  border-radius: 12px !important;
+  box-shadow: 0 5px 12px #0005 !important;
+}
+
+.play-card .card-number {
+  align-self: flex-start;
+  font-size: 25px !important;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.play-card .card-symbol {
+  font-size: 54px !important;
+  line-height: 1.2;
+  margin: auto;
+}
+
+.play-card .helper {
+  font-size: 10px !important;
+  color: #75664e !important;
+  margin: 4px 0 0;
+}
+
+#cardsArea .chip-row {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 8px 4px 14px;
+}
