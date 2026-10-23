@@ -206,7 +206,7 @@ $("#cardsArea").innerHTML = `
         <span class="card-number">${carta.valor}</span>
         <span class="card-symbol">${
           carta.palo === "Espada" ? "⚔" :
-          carta.palo === "Basto" ? "♣" :
+          carta.palo === "Basto" ? "🪵" :
           carta.palo === "Oro" ? "🪙" : "🏆"
         }</span>
         <p class="helper">Tocar para jugar</p>
