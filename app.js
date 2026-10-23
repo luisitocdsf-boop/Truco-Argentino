@@ -133,22 +133,80 @@ $("#publicMatch").addEventListener("click", publicMatch);
 
 $("#playVsMachine").addEventListener("click", startMachineGame);
 
+
 function startMachineGame() {
   showDetail(
-    "PARTIDA CONTRA LA MÁQUINA",
-    "¡A jugar al truco!",
-    "Modo 1 contra 1 · Dificultad normal",
+    "TRUCO ARGENTINO",
+    "Tu mano",
+    "Reparto de prueba · 1 contra 1",
     `
-      <div class="detail-panel" style="text-align:center">
-        <p>La partida se está preparando.</p>
-        <p class="helper">En el próximo paso agregaremos la baraja, el reparto de cartas y las jugadas.</p>
+      <div class="detail-panel">
+        <p class="helper">Tocá Repartir cartas para empezar.</p>
         <button class="primary-button" id="dealCardsButton">Repartir cartas</button>
+        <div id="cardsArea"></div>
       </div>
     `
   );
 
   $("#dealCardsButton").addEventListener("click", () => {
-    showToast("¡Ya podemos preparar el reparto de cartas!");
+    const palos = ["Espada", "Basto", "Oro", "Copa"];
+    const valores = [1, 2, 3, 4, 5, 6, 7, 10, 11, 12];
+    const baraja = [];
+
+    palos.forEach(palo => {
+      valores.forEach(valor => {
+        baraja.push({ palo, valor });
+      });
+    });
+
+    for (let i = baraja.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [baraja[i], baraja[j]] = [baraja[j], baraja[i]];
+    }
+
+    const jugador = baraja.slice(0, 3);
+    const maquina = baraja.slice(3, 6);
+
+    function nombreCarta(carta) {
+      const nombres = {
+        1: "As",
+        10: "Sota",
+        11: "Caballo",
+        12: "Rey"
+      };
+      return `${nombres[carta.valor] || carta.valor} de ${carta.palo}`;
+    }
+
+    $("#cardsArea").innerHTML = `
+      <h3 style="margin-top:24px">Tus cartas</h3>
+      <div class="chip-row">
+        ${jugador.map((carta, i) => `
+          <div class="detail-panel" style="flex:1;text-align:center;padding:12px">
+            <strong>${nombreCarta(carta)}</strong>
+            <p class="helper">Carta ${i + 1}</p>
+          </div>
+        `).join("")}
+      </div>
+
+      <h3 style="margin-top:24px">La máquina</h3>
+      <div class="chip-row">
+        ${maquina.map(() => `
+          <div class="detail-panel" style="flex:1;text-align:center;padding:18px">
+            🂠
+          </div>
+        `).join("")}
+      </div>
+
+      <p class="helper">Cartas repartidas. Todavía falta programar las jugadas y las reglas.</p>
+      <button class="primary-button" id="newDealButton">Repartir de nuevo</button>
+    `;
+
+    $("#dealCardsButton").hidden = true;
+
+    $("#newDealButton").addEventListener("click", () => {
+      startMachineGame();
+      $("#dealCardsButton").click();
+    });
   });
 }
 
