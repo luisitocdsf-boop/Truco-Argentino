@@ -195,6 +195,7 @@ function nombreCarta(carta) {
 
     
 
+
 $("#cardsArea").innerHTML = `
   <h3 style="margin-top:24px">Tus cartas</h3>
   <div class="chip-row">
@@ -202,7 +203,12 @@ $("#cardsArea").innerHTML = `
       <button class="detail-panel play-card"
         data-card="${i}"
         style="flex:1;text-align:center;padding:12px;color:inherit;cursor:pointer">
-        <strong>${nombreCarta(carta)}</strong>
+        <span class="card-number">${carta.valor}</span>
+        <span class="card-symbol">${
+          carta.palo === "Espada" ? "⚔" :
+          carta.palo === "Basto" ? "♣" :
+          carta.palo === "Oro" ? "🪙" : "🏆"
+        }</span>
         <p class="helper">Tocar para jugar</p>
       </button>
     `).join("")}
@@ -223,6 +229,7 @@ $("#cardsArea").innerHTML = `
   <p class="helper">Partida de prueba: todavía no se comparan los puntos.</p>
   <button class="primary-button" id="newDealButton">Repartir de nuevo</button>
 `;
+
 
 let turnoMaquina = 0;
 const cartasMesa = [];
