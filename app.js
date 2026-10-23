@@ -133,13 +133,90 @@ $("#publicMatch").addEventListener("click", publicMatch);
 $("#backButton").addEventListener("click", showPlay);
 $("#backLink").addEventListener("click", showPlay);
 $("#profileButton").addEventListener("click", () => showToast("El perfil y el registro se implementarán en la siguiente etapa."));
+
+function renderScoreSticks(points) {
+  const groups = Math.floor(points / 5);
+  const remainder = points % 5;
+  let html = "";
+
+  for (let i = 0; i < groups; i++) {
+    html += `<div class="stick-group complete" aria-label="Cinco puntos">
+      <span class="stick"></span><span class="stick"></span>
+      <span class="stick"></span><span class="stick"></span>
+      <span class="stick"></span>
+    </div>`;
+  }
+
+  if (remainder > 0) {
+    html += `<div class="stick-group" aria-label="${remainder} puntos">`;
+    for (let i = 0; i < remainder; i++) {
+      html += `<span class="stick" style="transform:rotate(${(i - (remainder - 1) / 2) * 27}deg)"></span>`;
+    }
+    html += `</div>`;
+  }
+
+  return html || '<span class="helper">Todavía sin puntos</span>';
+}
+
+function openScoreboard() {
+  const scores = { nosotros: 0, ellos: 0 };
+
+  function drawScoreboard() {
+    detailContent.innerHTML = `
+      <div class="scoreboard">
+        ${["nosotros", "ellos"].map(team => `
+          <section class="score-team">
+            <h3>${team === "nosotros" ? "NOSOTROS" : "ELLOS"}</h3>
+            <div class="score-number">${scores[team]}</div>
+            <div class="matchsticks">${renderScoreSticks(scores[team])}</div>
+            <div class="score-buttons">
+              <button class="score-minus" data-score="${team}" data-delta="-1" ${scores[team] === 0 ? "disabled" : ""}>− 1</button>
+              <button class="score-plus" data-score="${team}" data-delta="1" ${scores[team] === 30 || scores.nosotros === 30 || scores.ellos === 30 ? "disabled" : ""}>+ 1 punto</button>
+            </div>
+          </section>
+        `).join("")}
+      </div>
+      ${scores.nosotros === 30 || scores.ellos === 30
+        ? `<div class="score-finished">¡Ganó ${scores.nosotros === 30 ? "NOSOTROS" : "ELLOS"}!</div>`
+        : ""}
+      <button class="secondary-button score-reset" id="resetScore">Reiniciar partido</button>
+    `;
+
+    detailContent.querySelectorAll("[data-score]").forEach(button => {
+      button.addEventListener("click", () => {
+        const team = button.dataset.score;
+        const delta = Number(button.dataset.delta);
+        scores[team] = Math.max(0, Math.min(30, scores[team] + delta));
+        drawScoreboard();
+      });
+    });
+
+    $("#resetScore").addEventListener("click", () => {
+      scores.nosotros = 0;
+      scores.ellos = 0;
+      drawScoreboard();
+    });
+  }
+
+  playScreen.hidden = true;
+  detailScreen.hidden = false;
+  backButton.hidden = false;
+  $("#detailEyebrow").textContent = "TRUCO ARGENTINO";
+  $("#detailTitle").textContent = "Anotador";
+  $("#detailDescription").textContent = "Marcá los puntos de cada equipo hasta 30.";
+  drawScoreboard();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
 $$("[data-nav]").forEach(button => button.addEventListener("click", () => {
   const page = button.dataset.nav;
   $$(".nav-item").forEach(item => item.classList.toggle("active", item === button));
+
   if (page === "play") showPlay();
-  if (page === "score") showToast("El anotador funcional será la próxima pantalla que construiremos.");
+  if (page === "score") openScoreboard();
   if (page === "rules") showToast("Las reglas del truco se agregarán en la siguiente etapa.");
 }));
+
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(() => {}));
