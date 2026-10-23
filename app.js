@@ -240,14 +240,18 @@ $("#cardsArea").innerHTML = `
         <span class="card-number top-number">${carta.valor}</span>
 
 
+
 <span class="card-symbol card-pips">
-  ${Array.from(
-    { length: Math.min(carta.valor, 7) },
-    () => carta.palo === "Espada" ? "⚔" :
-         carta.palo === "Basto" ? "🪵" :
-         carta.palo === "Oro" ? "●" : "🏆"
-  ).join(" ")}
+  ${[1, 2, 3, 4, 5, 6, 7].includes(carta.valor)
+    ? Array.from({ length: carta.valor }, (_, i) => `
+        <span class="pip pip-${i + 1}">
+          ${dibujoPalo(carta.palo)}
+        </span>
+      `).join("")
+    : `<span class="figura-carta">${dibujoPalo(carta.palo)}</span>`
+  }
 </span>
+
 
 
         <p class="helper">Tocar para jugar</p>
