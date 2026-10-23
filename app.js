@@ -177,29 +177,60 @@ function startMachineGame() {
       return `${nombres[carta.valor] || carta.valor} de ${carta.palo}`;
     }
 
-    $("#cardsArea").innerHTML = `
-      <h3 style="margin-top:24px">Tus cartas</h3>
-      <div class="chip-row">
-        ${jugador.map((carta, i) => `
-          <div class="detail-panel" style="flex:1;text-align:center;padding:12px">
-            <strong>${nombreCarta(carta)}</strong>
-            <p class="helper">Carta ${i + 1}</p>
-          </div>
-        `).join("")}
-      </div>
+    
+$("#cardsArea").innerHTML = `
+  <h3 style="margin-top:24px">Tus cartas</h3>
+  <div class="chip-row">
+    ${jugador.map((carta, i) => `
+      <button
+        class="detail-panel play-card"
+        data-card="${i}"
+        style="flex:1;text-align:center;padding:12px;color:inherit;cursor:pointer"
+      >
+        <strong>${nombreCarta(carta)}</strong>
+        <p class="helper">Tocar para jugar</p>
+      </button>
+    `).join("")}
+  </div>
 
-      <h3 style="margin-top:24px">La máquina</h3>
-      <div class="chip-row">
-        ${maquina.map(() => `
-          <div class="detail-panel" style="flex:1;text-align:center;padding:18px">
-            🂠
-          </div>
-        `).join("")}
-      </div>
+  <h3 style="margin-top:24px">La mesa</h3>
+  <div id="tableArea" class="chip-row">
+    <p class="helper">Todavía no jugaste ninguna carta.</p>
+  </div>
 
-      <p class="helper">Cartas repartidas. Todavía falta programar las jugadas y las reglas.</p>
-      <button class="primary-button" id="newDealButton">Repartir de nuevo</button>
+  <h3 style="margin-top:24px">La máquina</h3>
+  <div class="chip-row">
+    ${maquina.map(() => `
+      <div class="detail-panel" style="flex:1;text-align:center;padding:18px">
+        🂠
+      </div>
+    `).join("")}
+  </div>
+
+  <p class="helper">Estamos preparando las jugadas. Todavía no se comparan los puntos.</p>
+  <button class="primary-button" id="newDealButton">Repartir de nuevo</button>
+`;
+
+document.querySelectorAll(".play-card").forEach(boton => {
+  boton.addEventListener("click", () => {
+    const indice = Number(boton.dataset.card);
+    const carta = jugador[indice];
+
+    if (!carta) return;
+
+    $("#tableArea").innerHTML = `
+      <div class="detail-panel" style="text-align:center;padding:16px">
+        <strong>${nombreCarta(carta)}</strong>
+        <p class="helper">Tu carta jugada</p>
+      </div>
     `;
+
+    jugador[indice] = null;
+    boton.disabled = true;
+    boton.style.opacity = "0.4";
+  });
+});
+
 
     $("#dealCardsButton").hidden = true;
 
