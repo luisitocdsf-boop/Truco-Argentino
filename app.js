@@ -241,7 +241,7 @@ $("#cardsArea").innerHTML = `
 
 
 
-<span class="card-symbol card-pips">
+<span class="card-symbol card-pips pips-${carta.valor}">
   ${[1, 2, 3, 4, 5, 6, 7].includes(carta.valor)
     ? Array.from({ length: carta.valor }, (_, i) => `
         <span class="pip pip-${i + 1}">
