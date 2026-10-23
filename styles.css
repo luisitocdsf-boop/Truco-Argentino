@@ -279,3 +279,38 @@ h1 span { color: var(--gold); }
   min-height: 145px !important;
   box-shadow: 0 5px 15px #0008 !important;
 }
+/* Diseño de baraja española */
+.play-card {
+  position: relative;
+  min-height: 155px !important;
+  min-width: 85px;
+  padding: 12px 6px !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, #fffdf3, #eee1c2) !important;
+  color: #241b10 !important;
+  border: 2px solid #c4a45c !important;
+  border-radius: 10px !important;
+  box-shadow: 0 4px 8px #0005 !important;
+}
+
+.play-card .card-number {
+  align-self: flex-start;
+  font-size: 20px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.play-card .card-symbol {
+  font-size: 42px;
+  line-height: 1.2;
+  margin: auto;
+}
+
+.play-card .helper {
+  color: #75664e !important;
+  font-size: 10px;
+  margin: 4px 0 0;
+}
