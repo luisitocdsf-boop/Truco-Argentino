@@ -204,12 +204,15 @@ $("#cardsArea").innerHTML = `
         data-card="${i}"
         style="flex:1;text-align:center;padding:12px;color:inherit;cursor:pointer">
         <span class="card-number top-number">${carta.valor}</span>
-<span class="card-number bottom-number">${carta.valor}</span>
-        <span class="card-symbol">${
-          carta.palo === "Espada" ? "⚔" :
-          carta.palo === "Basto" ? "🪵" :
-          carta.palo === "Oro" ? "🪙" : "🏆"
-        }</span>
+
+<span class="card-symbol">
+  ${
+    carta.palo === "Espada" ? "⚔" :
+    carta.palo === "Basto" ? "╱" :
+    carta.palo === "Oro" ? "●" : "♜"
+  }
+</span>
+
         <p class="helper">Tocar para jugar</p>
       </button>
     `).join("")}
