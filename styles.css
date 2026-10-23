@@ -270,3 +270,12 @@ h1 span { color: var(--gold); }
   color: #75664e;
   font-size: 12px;
 }
+/* PRUEBA VISUAL */
+.play-card {
+  background: #fff4d6 !important;
+  color: #20170c !important;
+  border: 3px solid #d4af37 !important;
+  border-radius: 14px !important;
+  min-height: 145px !important;
+  box-shadow: 0 5px 15px #0008 !important;
+}
