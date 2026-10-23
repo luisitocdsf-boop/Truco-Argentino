@@ -205,13 +205,16 @@ $("#cardsArea").innerHTML = `
         style="flex:1;text-align:center;padding:12px;color:inherit;cursor:pointer">
         <span class="card-number top-number">${carta.valor}</span>
 
-<span class="card-symbol">
-  ${
-    carta.palo === "Espada" ? "⚔" :
-    carta.palo === "Basto" ? "╱" :
-    carta.palo === "Oro" ? "●" : "♜"
-  }
+
+<span class="card-symbol card-pips">
+  ${Array.from(
+    { length: Math.min(carta.valor, 7) },
+    () => carta.palo === "Espada" ? "⚔" :
+         carta.palo === "Basto" ? "🪵" :
+         carta.palo === "Oro" ? "●" : "🏆"
+  ).join(" ")}
 </span>
+
 
         <p class="helper">Tocar para jugar</p>
       </button>
