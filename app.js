@@ -272,31 +272,23 @@ function dibujoPalo(palo) {
 
 
 
+
 $("#cardsArea").innerHTML = `
   <h3 style="margin-top:24px">Tus cartas</h3>
   <div class="chip-row">
     ${jugador.map((carta, i) => `
       <button class="detail-panel play-card"
         data-card="${i}"
-        style="flex:1;text-align:center;padding:12px;color:inherit;cursor:pointer">
-        <span class="card-number top-number">${carta.valor}</span>
-
-
-
-<span class="card-symbol card-pips pips-${carta.valor}">
-  ${[1, 2, 3, 4, 5, 6, 7].includes(carta.valor)
-    ? Array.from({ length: carta.valor }, (_, i) => `
-        <span class="pip pip-${i + 1}">
-          ${dibujoPalo(carta.palo)}
-        </span>
-      `).join("")
-    : `<span class="figura-carta">${dibujoPalo(carta.palo)}</span>`
-  }
-</span>
-
-
-
-        <p class="helper">Tocar para jugar</p>
+        style="flex:1;text-align:center;padding:6px;color:inherit;cursor:pointer"
+        ${carta ? "" : "disabled"}>
+        ${carta ? `
+          <img
+            src="${imagenCarta(carta)}"
+            alt="${nombreCarta(carta)}"
+            style="width:100%;max-width:150px;height:auto;display:block;margin:auto"
+          >
+          <p class="helper">Tocar para jugar</p>
+        ` : ""}
       </button>
     `).join("")}
   </div>
