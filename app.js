@@ -191,7 +191,29 @@ function nombreCarta(carta) {
 
   return `${nombres[carta.valor] || carta.valor} ${palos[carta.palo] || carta.palo} de ${carta.palo}`;
 }
+function imagenCarta(carta) {
+  const palos = {
+    Espada: "espada",
+    Basto: "basto",
+    Oro: "oro",
+    Copa: "copa"
+  };
 
+  const nombres = {
+    1: "1",
+    2: "2",
+    3: "3",
+    4: "4",
+    5: "5",
+    6: "6",
+    7: "7",
+    10: "sota",
+    11: "caballo",
+    12: "rey"
+  };
+
+  return `./cartas/${palos[carta.palo]}_${nombres[carta.valor]}.png`;
+}
 
 
 function dibujoPalo(palo) {
