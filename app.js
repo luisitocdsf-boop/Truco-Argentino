@@ -1,4 +1,3 @@
-
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => [...document.querySelectorAll(selector)];
 
@@ -10,6 +9,10 @@ const toast = $("#toast");
 
 let selectedMode = "2 vs 2";
 let toastTimer;
+
+// 1 = empieza el jugador; -1 = empieza la máquina.
+// Se conserva entre partidas nuevas.
+let empiezaPrimeraMano = 1;
 
 function showToast(message) {
   if (!toast) return;
@@ -370,7 +373,9 @@ function startMachineGame() {
 
     let ronda = 0;
     let terminada = false;
-    let empieza = 1;
+
+    // La primera mano de cada partida respeta el turno guardado.
+    let empieza = empiezaPrimeraMano;
 
     $("#dealCardsButton").hidden = true;
 
@@ -387,7 +392,7 @@ function startMachineGame() {
       <section class="table-center">
         <h3>LA MESA</h3>
         <div class="table-play" id="tableArea">
-          <p class="helper">Vos abrís la primera ronda.</p>
+          <p class="helper">Preparando la mano...</p>
         </div>
       </section>
 
@@ -518,7 +523,7 @@ function startMachineGame() {
         `Ronda ${ronda + 1} de 3: ${resultadoTexto}`;
 
       // El ganador de la ronda abre la siguiente.
-      // Si hay empate, mantiene la salida quien ya había abierto.
+      // Si hay empate, conserva la salida quien había abierto.
       if (resultado === 1) empieza = 1;
       if (resultado === -1) empieza = -1;
 
@@ -578,6 +583,10 @@ function startMachineGame() {
     $("#newMatchButton").addEventListener("click", () => {
       game.nosotros = 0;
       game.ellos = 0;
+
+      // Alternar el jugador que empieza la próxima partida.
+      empiezaPrimeraMano *= -1;
+
       renderGame();
     });
 
