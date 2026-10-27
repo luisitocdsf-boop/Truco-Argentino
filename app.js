@@ -12,6 +12,7 @@ let selectedMode = "2 vs 2";
 let toastTimer;
 
 function showToast(message) {
+  if (!toast) return;
   toast.textContent = message;
   toast.classList.add("show");
   clearTimeout(toastTimer);
@@ -37,22 +38,24 @@ function showDetail(eyebrow, title, description, html) {
 }
 
 function modePicker(defaultMode = selectedMode) {
-  return `<span class="field-label">Modo de juego</span>
+  return `
+    <span class="field-label">Modo de juego</span>
     <div class="chip-row">
       ${["1 vs 1", "2 vs 2", "3 vs 3"].map(mode => `
         <button class="chip ${mode === defaultMode ? "selected" : ""}"
           type="button" data-pick-mode="${mode}">${mode}</button>
       `).join("")}
-    </div>`;
+    </div>
+  `;
 }
 
 function attachModePicker() {
   $$("[data-pick-mode]").forEach(button => {
     button.addEventListener("click", () => {
       selectedMode = button.dataset.pickMode;
-      $$("[data-pick-mode]").forEach(b =>
-        b.classList.toggle("selected", b === button)
-      );
+      $$("[data-pick-mode]").forEach(b => {
+        b.classList.toggle("selected", b === button);
+      });
     });
   });
 }
@@ -64,6 +67,16 @@ function makeRoomCode() {
     code += chars[Math.floor(Math.random() * chars.length)];
   }
   return code;
+}
+
+function escapeHtml(text) {
+  return String(text).replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[char]);
 }
 
 function createRoom() {
@@ -105,7 +118,7 @@ function createRoom() {
     $("#roomResult").innerHTML = `
       <div class="room-code" id="generatedCode">${code}</div>
       <p class="helper">
-        Modo: <strong>${selectedMode}</strong> ·
+        Modo: <strong>${escapeHtml(selectedMode)}</strong> ·
         Anfitrión: <strong>${escapeHtml(nickname)}</strong>
       </p>
       <button class="secondary-button" id="shareCodeButton">
@@ -140,7 +153,7 @@ function createRoom() {
       }
     });
 
-    showToast("Código generado. La sala online llegará en la próxima etapa.");
+    showToast("Código generado. La sala online llegará en otra etapa.");
   });
 }
 
@@ -176,7 +189,7 @@ function joinRoom() {
       return;
     }
 
-    showToast("Código con formato válido. Falta conectar las salas online.");
+    showToast("Código válido en formato. Falta conectar las salas online.");
   });
 }
 
@@ -204,7 +217,7 @@ function publicMatch() {
     $("#searchResult").innerHTML = `
       <div class="detail-panel" style="margin-top:14px;text-align:center">
         <div style="font-size:30px;color:var(--gold-light);margin-bottom:8px">⌕</div>
-        <strong>Modo seleccionado: ${selectedMode}</strong>
+        <strong>Modo seleccionado: ${escapeHtml(selectedMode)}</strong>
         <p class="helper">Todavía no hay conexión con un servidor de partidas.</p>
         <button class="secondary-button" id="cancelSearch">
           Cancelar búsqueda
@@ -219,16 +232,7 @@ function publicMatch() {
   });
 }
 
-function escapeHtml(text) {
-  return text.replace(/[&<>"']/g, char => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#39;"
-  }[char]));
-}
-
+// Selección de modos de juego.
 $$("[data-mode]").forEach(button => {
   button.addEventListener("click", () => {
     selectedMode = button.dataset.mode;
@@ -241,7 +245,7 @@ $$("[data-mode]").forEach(button => {
         <div class="detail-panel"
           style="text-align:center;border:0;padding:6px 0 14px;background:transparent">
           <div style="font-size:45px;color:var(--gold-light)">♠</div>
-          <strong>${selectedMode}</strong>
+          <strong>${escapeHtml(selectedMode)}</strong>
           <p class="helper">
             Podés crear una sala privada o buscar una partida pública con este modo.
           </p>
@@ -310,27 +314,105 @@ function imagenCarta(carta) {
   return `./cartas/${palos[carta.palo]}_${nombres[carta.valor]}.png`;
 }
 
+// Jerarquía de cartas del truco argentino, de mayor a menor.
+function fuerzaCarta(carta) {
+  if (carta.valor === 1 && carta.palo === "Espada") return 14;
+  if (carta.valor === 1 && carta.palo === "Basto") return 13;
+  if (carta.valor === 7 && carta.palo === "Espada") return 12;
+  if (carta.valor === 7 && carta.palo === "Oro") return 11;
+  if (carta.valor === 3) return 10;
+  if (carta.valor === 2) return 9;
+  if (carta.valor === 1) return 8;
+  if (carta.valor === 12) return 7;
+  if (carta.valor === 11) return 6;
+  if (carta.valor === 10) return 5;
+  if (carta.valor === 7) return 4;
+  if (carta.valor === 6) return 3;
+  if (carta.valor === 5) return 2;
+  if (carta.valor === 4) return 1;
+  return 0;
+}
+
+// Devuelve 1 si gana el jugador, -1 si gana la máquina y 0 si empatan.
+function resultadoRonda(cartaJugador, cartaMaquina) {
+  const jugador = fuerzaCarta(cartaJugador);
+  const maquina = fuerzaCarta(cartaMaquina);
+
+  if (jugador > maquina) return 1;
+  if (maquina > jugador) return -1;
+  return 0;
+}
+
+// Decide quién ganó la mano de tres rondas.
+// Si se empata la tercera ronda después de un 1-1,
+// gana quien había ganado la primera.
+function ganadorMano(resultados) {
+  const [r1, r2, r3] = resultados;
+
+  // Primera ronda empatada: quien gana la segunda se lleva la mano.
+  if (r1 === 0 && r2 !== 0) return r2;
+
+  // Si las dos primeras fueron empatadas, decide la tercera.
+  if (r1 === 0 && r2 === 0) return r3;
+
+  // Si alguien gana las dos primeras, ya ganó la mano.
+  if (r1 !== 0 && r1 === r2) return r1;
+
+  // Si las dos primeras se repartieron, decide la tercera.
+  if (r1 !== 0 && r2 !== 0 && r1 !== r2) {
+    if (r3 !== 0) return r3;
+    return r1;
+  }
+
+  // Si la segunda fue empate, gana quien ganó la primera.
+  if (r2 === 0 && r1 !== 0) return r1;
+
+  // Si todavía no hay decisión, usa la tercera ronda.
+  return r3;
+}
+
 function startMachineGame() {
-  showDetail(
-    "TRUCO ARGENTINO",
-    "Tu mano",
-    "Reparto de prueba · 1 contra 1",
-    `
-      <div class="detail-panel">
-        <p class="helper">Tocá Repartir cartas para empezar.</p>
-        <button class="primary-button" id="dealCardsButton">
-          Repartir cartas
-        </button>
-        <div id="cardsArea"></div>
-      </div>
-    `
-  );
+  const game = {
+    nosotros: 0,
+    ellos: 0,
+    mano: 0
+  };
 
-  const dealButton = $("#dealCardsButton");
+  function renderGame() {
+    showDetail(
+      "TRUCO ARGENTINO",
+      "Tu mano",
+      "Jugá tus cartas contra la máquina. Primero en llegar a 30 puntos gana.",
+      `
+        <div class="detail-panel">
+          <div class="scoreboard">
+            <section class="score-team">
+              <h3>NOSOTROS</h3>
+              <div class="score-number" id="machinePlayerScore">${game.nosotros}</div>
+            </section>
+            <section class="score-team">
+              <h3>MÁQUINA</h3>
+              <div class="score-number" id="machineOpponentScore">${game.ellos}</div>
+            </section>
+          </div>
+          <p class="helper" id="machineGameStatus">Prepará la próxima mano.</p>
+          <button class="primary-button" id="dealCardsButton">
+            Repartir cartas
+          </button>
+          <div id="cardsArea"></div>
+        </div>
+      `
+    );
 
-  dealButton.addEventListener("click", repartir);
+    $("#dealCardsButton").addEventListener("click", repartir);
+  }
 
   function repartir() {
+    if (game.nosotros >= 30 || game.ellos >= 30) {
+      showToast("La partida terminó. Iniciá una nueva partida.");
+      return;
+    }
+
     const palos = ["Espada", "Basto", "Oro", "Copa"];
     const valores = [1, 2, 3, 4, 5, 6, 7, 10, 11, 12];
     const baraja = [];
@@ -339,7 +421,6 @@ function startMachineGame() {
       valores.forEach(valor => baraja.push({ palo, valor }));
     });
 
-    // Mezclar la baraja.
     for (let i = baraja.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [baraja[i], baraja[j]] = [baraja[j], baraja[i]];
@@ -347,33 +428,26 @@ function startMachineGame() {
 
     const jugador = baraja.slice(0, 3);
     const maquina = baraja.slice(3, 6);
-
-    let turnoMaquina = 0;
-    let ronda = 1;
-    let partidaTerminada = false;
+    const resultados = [];
     const cartasMesa = [];
 
-    // Ocultar el botón inicial después de repartir.
-    dealButton.hidden = true;
+    let ronda = 0;
+    let terminada = false;
+
+    $("#dealCardsButton").hidden = true;
+    $("#machineGameStatus").textContent = "Elegí una carta para jugar la primera ronda.";
 
     $("#cardsArea").innerHTML = `
       <h3 style="margin-top:24px">Tus cartas</h3>
-
-      <div class="chip-row">
+      <div class="chip-row" id="playerCardsArea">
         ${jugador.map((carta, i) => `
-          <button
-            class="detail-panel play-card"
-            data-card="${i}"
-            type="button"
+          <button class="detail-panel play-card"
+            data-card="${i}" type="button"
             style="flex:1;min-width:0;text-align:center;padding:6px;color:inherit;cursor:pointer"
-            aria-label="Jugar ${nombreCarta(carta)}"
-          >
-            <img
-              src="${imagenCarta(carta)}"
-              alt="${nombreCarta(carta)}"
+            aria-label="Jugar ${nombreCarta(carta)}">
+            <img src="${imagenCarta(carta)}" alt="${nombreCarta(carta)}"
               style="width:100%;max-width:150px;height:auto;display:block;margin:auto"
-              onerror="this.style.display='none';this.nextElementSibling.hidden=false"
-            >
+              onerror="this.style.display='none';this.nextElementSibling.hidden=false">
             <p class="helper" hidden>${nombreCarta(carta)}</p>
             <p class="helper">Tocar para jugar</p>
           </button>
@@ -389,16 +463,18 @@ function startMachineGame() {
       <div class="chip-row" id="machineCardsArea">
         ${maquina.map(() => `
           <div class="detail-panel"
-            style="flex:1;text-align:center;padding:18px">🂠</div>
+            style="flex:1;min-width:0;text-align:center;padding:18px">🂠</div>
         `).join("")}
       </div>
 
-      <p class="helper">
-        Partida de prueba: todavía no se comparan los puntos.
-      </p>
+      <p class="helper" id="roundResult">Ronda 1 de 3.</p>
+      <div id="handResult"></div>
 
-      <button class="primary-button" id="newDealButton">
-        Repartir de nuevo
+      <button class="primary-button" id="newDealButton" hidden>
+        Repartir otra mano
+      </button>
+      <button class="secondary-button" id="newMatchButton" hidden>
+        Nueva partida
       </button>
     `;
 
@@ -406,19 +482,23 @@ function startMachineGame() {
 
     botones.forEach(boton => {
       boton.addEventListener("click", () => {
-        if (partidaTerminada || boton.disabled) return;
+        if (terminada || boton.disabled) return;
 
         const indice = Number(boton.dataset.card);
-        const carta = jugador[indice];
+        const cartaJugador = jugador[indice];
+        const cartaMaquina = maquina[ronda];
 
-        if (!carta) return;
+        if (!cartaJugador || !cartaMaquina) return;
 
-        // Juega una carta el jugador.
+        const resultado = resultadoRonda(cartaJugador, cartaMaquina);
+        resultados.push(resultado);
+
         cartasMesa.push({
-          carta,
-          nombre: nombreCarta(carta),
+          carta: cartaJugador,
+          nombre: nombreCarta(cartaJugador),
           jugador: "Vos",
-          ronda
+          ronda: ronda + 1,
+          resultado
         });
 
         jugador[indice] = null;
@@ -426,68 +506,102 @@ function startMachineGame() {
         boton.style.opacity = "0.4";
         boton.style.cursor = "default";
 
-        // La máquina responde con una carta.
-        const cartaMaquina = maquina[turnoMaquina];
+        const machineArea = $("#machineCardsArea");
+        machineArea.children[ronda].innerHTML = `
+          <img src="${imagenCarta(cartaMaquina)}" alt="${nombreCarta(cartaMaquina)}"
+            style="width:100%;max-width:150px;height:auto;display:block;margin:auto"
+            onerror="this.outerHTML='<p>${nombreCarta(cartaMaquina)}</p>'">
+        `;
 
-        if (cartaMaquina) {
-          cartasMesa.push({
-            carta: cartaMaquina,
-            nombre: nombreCarta(cartaMaquina),
-            jugador: "Máquina",
-            ronda
-          });
+        cartasMesa.push({
+          carta: cartaMaquina,
+          nombre: nombreCarta(cartaMaquina),
+          jugador: "Máquina",
+          ronda: ronda + 1,
+          resultado: -resultado
+        });
 
-          turnoMaquina++;
-
-          const cartasMaquina = $("#machineCardsArea");
-          if (cartasMaquina && cartasMaquina.children[turnoMaquina - 1]) {
-            cartasMaquina.children[turnoMaquina - 1].innerHTML = `
-              <img
-                src="${imagenCarta(cartaMaquina)}"
-                alt="${nombreCarta(cartaMaquina)}"
-                style="width:100%;max-width:150px;height:auto;display:block;margin:auto"
-                onerror="this.outerHTML='<p>${nombreCarta(cartaMaquina)}</p>'"
-              >
-            `;
-          }
-        }
-
-        // Mostrar las cartas jugadas con sus imágenes.
         $("#tableArea").innerHTML = cartasMesa.map(c => `
           <div class="detail-panel"
             style="flex:1;min-width:0;text-align:center;padding:8px">
-            <img
-              src="${imagenCarta(c.carta)}"
-              alt="${c.nombre}"
+            <img src="${imagenCarta(c.carta)}" alt="${c.nombre}"
               style="width:100%;max-width:120px;height:auto;display:block;margin:auto"
-              onerror="this.style.display='none';this.nextElementSibling.hidden=false"
-            >
+              onerror="this.style.display='none';this.nextElementSibling.hidden=false">
             <p class="helper" hidden>${c.nombre}</p>
-            <strong>${c.jugador}</strong>
+            <strong>${escapeHtml(c.jugador)}</strong>
             <p class="helper">Ronda ${c.ronda}</p>
           </div>
         `).join("");
 
-        // Avanzar a la siguiente ronda cuando ambos jugaron.
-        if (turnoMaquina >= 3) {
-          partidaTerminada = true;
-          $("#cardsArea").insertAdjacentHTML(
-            "beforeend",
-            `<p class="helper">Terminó la mano de prueba. Podés repartir de nuevo.</p>`
-          );
+        const resultadoTexto =
+          resultado === 1 ? "Ganaste esta ronda." :
+          resultado === -1 ? "La máquina ganó esta ronda." :
+          "Ronda empatada.";
+
+        $("#roundResult").textContent =
+          `Ronda ${ronda + 1} de 3: ${resultadoTexto}`;
+
+        ronda++;
+
+        if (ronda >= 3) {
+          terminada = true;
+
+          const ganador = ganadorMano(resultados);
+          let mensaje;
+
+          if (ganador === 1) {
+            game.nosotros = Math.min(30, game.nosotros + 1);
+            mensaje = "¡Ganaste la mano! Sumás 1 punto.";
+          } else if (ganador === -1) {
+            game.ellos = Math.min(30, game.ellos + 1);
+            mensaje = "La máquina ganó la mano. Suma 1 punto.";
+          } else {
+            mensaje = "La mano terminó empatada. Nadie suma puntos.";
+          }
+
+          $("#machinePlayerScore").textContent = game.nosotros;
+          $("#machineOpponentScore").textContent = game.ellos;
+
+          const partidaCompleta = game.nosotros >= 30 || game.ellos >= 30;
+
+          $("#handResult").innerHTML = `
+            <div class="detail-panel" style="margin-top:14px;text-align:center">
+              <strong>${mensaje}</strong>
+              <p class="helper">
+                Resultado: Vos ${game.nosotros} — Máquina ${game.ellos}
+              </p>
+              ${partidaCompleta ? `
+                <h3>¡${game.nosotros >= 30 ? "Ganaste" : "La máquina ganó"} la partida!</h3>
+              ` : ""}
+            </div>
+          `;
+
+          $("#machineGameStatus").textContent = "Mano terminada.";
 
           botones.forEach(b => {
             b.disabled = true;
           });
+
+          $("#newDealButton").hidden = partidaCompleta;
+          $("#newMatchButton").hidden = !partidaCompleta;
         } else {
-          ronda++;
+          $("#machineGameStatus").textContent =
+            `Ronda ${ronda + 1}: elegí otra carta.`;
         }
       });
     });
 
-    // Un solo evento para repartir otra mano.
     $("#newDealButton").addEventListener("click", repartir);
+
+    $("#newMatchButton").addEventListener("click", () => {
+      game.nosotros = 0;
+      game.ellos = 0;
+      game.mano = 0;
+      renderGame();
+    });
   }
+
+  renderGame();
 }
 
 // ======================================================
@@ -576,6 +690,10 @@ function openScoreboard() {
       button.addEventListener("click", () => {
         const team = button.dataset.score;
         const delta = Number(button.dataset.delta);
+
+        if (delta > 0 && (scores.nosotros === 30 || scores.ellos === 30)) {
+          return;
+        }
 
         scores[team] = Math.max(0, Math.min(30, scores[team] + delta));
         drawScoreboard();
