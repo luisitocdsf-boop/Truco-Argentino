@@ -10,9 +10,10 @@ const toast = $("#toast");
 let selectedMode = "2 vs 2";
 let toastTimer;
 
-// 1 = empieza el jugador; -1 = empieza la máquina.
-// Se conserva entre partidas nuevas.
-let empiezaPrimeraMano = 1;
+// Turno inicial persistente:
+// 1 = jugador; -1 = máquina.
+let empiezaPrimeraMano =
+  localStorage.getItem("trucoEmpieza") === "-1" ? -1 : 1;
 
 function showToast(message) {
   if (!toast) return;
@@ -212,6 +213,7 @@ function publicMatch() {
         <button class="secondary-button" id="cancelSearch">Cancelar</button>
       </div>
     `;
+
     $("#cancelSearch").addEventListener("click", () => {
       $("#searchResult").innerHTML = "";
       showToast("Búsqueda cancelada.");
@@ -374,7 +376,7 @@ function startMachineGame() {
     let ronda = 0;
     let terminada = false;
 
-    // La primera mano de cada partida respeta el turno guardado.
+    // El turno inicial se toma del valor persistente.
     let empieza = empiezaPrimeraMano;
 
     $("#dealCardsButton").hidden = true;
@@ -523,7 +525,7 @@ function startMachineGame() {
         `Ronda ${ronda + 1} de 3: ${resultadoTexto}`;
 
       // El ganador de la ronda abre la siguiente.
-      // Si hay empate, conserva la salida quien había abierto.
+      // Si empatan, mantiene la salida quien ya había abierto.
       if (resultado === 1) empieza = 1;
       if (resultado === -1) empieza = -1;
 
@@ -584,8 +586,14 @@ function startMachineGame() {
       game.nosotros = 0;
       game.ellos = 0;
 
-      // Alternar el jugador que empieza la próxima partida.
+      // Alterna quién empieza la próxima partida.
       empiezaPrimeraMano *= -1;
+
+      // Guarda el turno para que no se pierda al recargar.
+      localStorage.setItem(
+        "trucoEmpieza",
+        String(empiezaPrimeraMano)
+      );
 
       renderGame();
     });
