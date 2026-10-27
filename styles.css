@@ -15,7 +15,9 @@
   --wood-light: #80502e;
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 html {
   min-height: 100%;
@@ -42,6 +44,10 @@ button {
 button:focus-visible {
   outline: 2px solid var(--gold-light);
   outline-offset: 3px;
+}
+
+button:disabled {
+  cursor: default;
 }
 
 .app-shell {
@@ -72,7 +78,9 @@ button:focus-visible {
   background: linear-gradient(145deg,#282319,#121212);
 }
 
-.brand-copy { flex: 1; }
+.brand-copy {
+  flex: 1;
+}
 
 .eyebrow {
   margin: 0 0 5px;
@@ -89,7 +97,9 @@ h1 {
   font-weight: 900;
 }
 
-h1 span { color: var(--gold); }
+h1 span {
+  color: var(--gold);
+}
 
 .icon-button,
 .profile-button {
@@ -102,16 +112,22 @@ h1 span { color: var(--gold); }
   font-size: 21px;
 }
 
-.profile-button { font-size: 22px; }
+.profile-button {
+  font-size: 22px;
+}
 
-.screen { animation: appear .18s ease-out; }
+.screen {
+  animation: appear .18s ease-out;
+}
 
 @keyframes appear {
   from { opacity: .4; transform: translateY(5px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-.intro { padding: 28px 0 21px; }
+.intro {
+  padding: 28px 0 21px;
+}
 
 .intro h2 {
   margin: 0;
@@ -127,8 +143,13 @@ h1 span { color: var(--gold); }
   color: var(--gold-light);
 }
 
-.intro .muted { margin: 13px 0 0; }
-.gold { color: var(--gold); }
+.intro .muted {
+  margin: 13px 0 0;
+}
+
+.gold {
+  color: var(--gold);
+}
 
 .muted {
   color: var(--muted);
@@ -157,9 +178,13 @@ h1 span { color: var(--gold); }
 }
 
 .mode-card:active,
-.action-card:active { transform: scale(.985); }
+.action-card:active {
+  transform: scale(.985);
+}
 
-.mode-card:hover { border-color: var(--gold); }
+.mode-card:hover {
+  border-color: var(--gold);
+}
 
 .mode-icon {
   color: var(--gold-light);
@@ -239,9 +264,19 @@ h1 span { color: var(--gold); }
   gap: 4px;
 }
 
-.action-copy strong { font-size: 13px; }
-.action-copy small { font-size: 11px; color: var(--muted); }
-.action-arrow { font-size: 25px; color: var(--gold); }
+.action-copy strong {
+  font-size: 13px;
+}
+
+.action-copy small {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.action-arrow {
+  font-size: 25px;
+  color: var(--gold);
+}
 
 .notice {
   display: flex;
@@ -287,8 +322,14 @@ h1 span { color: var(--gold); }
   padding: 3px;
 }
 
-.nav-item span { font-size: 20px; line-height: 1; }
-.nav-item.active { color: var(--gold-light); }
+.nav-item span {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.nav-item.active {
+  color: var(--gold-light);
+}
 
 .back-link {
   border: 0;
@@ -298,8 +339,13 @@ h1 span { color: var(--gold); }
   font-size: 12px;
 }
 
-.compact { padding-top: 24px; }
-.compact h2 { font-size: 34px; }
+.compact {
+  padding-top: 24px;
+}
+
+.compact h2 {
+  font-size: 34px;
+}
 
 .detail-panel {
   padding: 17px;
@@ -341,6 +387,10 @@ h1 span { color: var(--gold); }
   border: 1px solid #f0d995;
   color: #17130a;
   background: linear-gradient(100deg,#c7a14b,#f0d995);
+}
+
+.primary-button:active {
+  filter: brightness(1.08);
 }
 
 .secondary-button {
@@ -412,9 +462,14 @@ h1 span { color: var(--gold); }
   transform: translate(-50%,0);
 }
 
-[hidden] { display: none !important; }
+[hidden] {
+  display: none !important;
+}
 
-/* ANOTADOR */
+/* =========================================
+   ANOTADOR
+========================================= */
+
 .scoreboard {
   display: grid;
   grid-template-columns: repeat(2,minmax(0,1fr));
@@ -526,7 +581,9 @@ h1 span { color: var(--gold); }
   color: #17130a;
 }
 
-.score-reset { margin-top: 18px; }
+.score-reset {
+  margin-top: 18px;
+}
 
 .score-finished {
   margin-top: 14px;
@@ -538,40 +595,32 @@ h1 span { color: var(--gold); }
   font-weight: 800;
 }
 
-@media (max-width: 360px) {
-  .app-shell { padding-left: 14px; padding-right: 14px; }
-  .mode-grid { gap: 6px; }
-  .mode-card { padding: 12px 7px; }
-  .mode-title { font-size: 11px; }
-  .mode-subtitle { font-size: 9px; }
-  .score-team { padding: 12px 6px; }
-  .score-number { font-size: 38px; }
-  .matchsticks { gap: 10px 2px; }
+/* =========================================
+   MESA DE TRUCO
+========================================= */
+
+#detailScreen:has(.machine-game) .intro {
+  padding-top: 12px;
+  padding-bottom: 10px;
 }
 
-/* MESA DE TRUCO */
-#detailScreen:has(#cardsArea) .intro {
-  padding-top: 14px;
-  padding-bottom: 12px;
+#detailScreen:has(.machine-game) .intro h2 {
+  font-size: 29px;
 }
 
-#detailScreen:has(#cardsArea) .intro h2 {
-  font-size: 30px;
-}
-
-#detailScreen:has(#cardsArea) #detailDescription {
+#detailScreen:has(.machine-game) #detailDescription {
   font-size: 12px;
 }
 
-#detailScreen:has(#cardsArea) #detailContent {
-  padding: 12px;
+#detailScreen:has(.machine-game) #detailContent {
+  padding: 10px;
   border: 0;
-  border-radius: 18px;
+  border-radius: 19px;
   background:
     repeating-linear-gradient(
       0deg,
-      rgba(35,18,8,.28) 0px,
-      rgba(35,18,8,.28) 3px,
+      rgba(35,18,8,.22) 0px,
+      rgba(35,18,8,.22) 3px,
       transparent 3px,
       transparent 23px
     ),
@@ -589,67 +638,206 @@ h1 span { color: var(--gold); }
     0 8px 22px #0008;
 }
 
-#detailScreen:has(#cardsArea) #detailContent > .detail-panel {
+.machine-game {
   padding: 12px;
   border: 1px solid #b18a53;
-  border-radius: 12px;
-  background: rgba(29,19,12,.62);
+  border-radius: 13px;
+  background: rgba(29,19,12,.68);
   box-shadow: inset 0 1px 0 #ffffff12;
 }
 
-#detailScreen:has(#cardsArea) .scoreboard {
-  margin-top: 0;
+.machine-game .scoreboard {
+  margin: 0 0 8px;
   gap: 8px;
 }
 
-#detailScreen:has(#cardsArea) .score-team {
+.machine-game .score-team {
   padding: 9px 6px;
   border-color: #b18a53;
   border-radius: 10px;
   background: linear-gradient(145deg,#38271a,#1e1711);
 }
 
-#detailScreen:has(#cardsArea) .score-number {
-  margin: 7px 0;
-  font-size: 34px;
+.machine-game .score-team h3 {
+  font-size: 11px;
 }
 
+.machine-game .score-number {
+  margin: 7px 0;
+  font-size: 32px;
+}
+
+#detailScreen:has(.machine-game) #machineGameStatus {
+  margin: 9px 0;
+  color: #ffe9bc;
+  text-align: center;
+}
+
+/* Títulos de cada zona */
+
 #cardsArea h3 {
-  margin: 18px 0 8px;
+  margin: 13px 0 8px;
   color: #f5dfad;
-  font-size: 12px;
-  letter-spacing: .08em;
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-align: center;
   text-transform: uppercase;
 }
 
-#cardsArea .chip-row {
+/* Cartas de la máquina */
+
+#cardsArea .machine-cards {
   display: flex;
-  flex-wrap: nowrap;
-  justify-content: flex-start;
-  gap: 9px;
-  overflow-x: auto;
-  padding: 7px 3px 13px;
-  scrollbar-width: thin;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 4px 2px 10px;
+}
+
+#cardsArea .opponent-card {
+  display: grid;
+  place-items: center;
+  flex: 0 1 23%;
+  min-width: 0;
+  max-width: 94px;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  border: 1px solid #d0b273;
+  border-radius: 7px;
+  color: #f0d995;
+  background:
+    repeating-linear-gradient(45deg,#6b4528 0 4px,#4c2d1a 4px 8px);
+  box-shadow: 0 4px 8px #0006;
+  font-size: clamp(25px,8vw,38px);
+}
+
+#cardsArea .opponent-card img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #fff8e8;
+}
+
+#cardsArea .opponent-card.card-revealed {
+  background: #fff8e8;
+}
+
+/* Centro de la mesa */
+
+#cardsArea .table-center {
+  margin: 3px 0 10px;
+  padding: 10px 8px 12px;
+  border: 1px solid rgba(218,183,112,.48);
+  border-radius: 14px;
+  background:
+    radial-gradient(ellipse at center,rgba(102,146,82,.22),transparent 75%),
+    linear-gradient(145deg,#315437,#234329);
+  box-shadow:
+    inset 0 0 0 3px rgba(16,38,20,.45),
+    0 4px 9px #0004;
+}
+
+#cardsArea .table-center h3 {
+  margin-top: 0;
+  color: #f4dfad;
+}
+
+#cardsArea .table-play {
+  min-height: 135px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+#cardsArea .table-play > .helper {
+  text-align: center;
+}
+
+#cardsArea .played-card {
+  display: flex;
+  flex: 0 1 37%;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+  max-width: 125px;
+  padding: 6px;
+  border: 1px solid #d4bc87;
+  border-radius: 8px;
+  color: #251b10;
+  background: #fff8e8;
+  box-shadow: 0 4px 9px #0006;
+  animation: cardEnter .18s ease-out;
+}
+
+@keyframes cardEnter {
+  from { opacity: .35; transform: translateY(5px) scale(.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+#cardsArea .played-card.round-winner {
+  border: 2px solid #f0d995;
+  box-shadow: 0 0 0 2px #d9b96c44,0 4px 10px #0006;
+}
+
+#cardsArea .played-by {
+  align-self: stretch;
+  margin-bottom: 5px;
+  color: #6c4b27;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: .07em;
+  text-align: center;
+}
+
+#cardsArea .played-card img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 145px;
+  object-fit: contain;
+}
+
+#cardsArea .played-name {
+  margin-top: 5px;
+  color: #5d4b35;
+  font-size: 9px;
+  text-align: center;
+}
+
+/* Cartas del jugador */
+
+#cardsArea .player-cards {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: 10px;
+  padding: 5px 2px 9px;
 }
 
 #cardsArea .play-card {
   position: relative;
   display: flex;
-  flex: 0 0 29%;
-  width: 29%;
+  flex: 0 1 31%;
+  width: 31%;
   min-width: 0;
-  min-height: 0;
-  height: auto;
-  padding: 6px;
+  max-width: 132px;
+  padding: 5px;
   align-items: center;
   justify-content: center;
-  gap: 5px;
   overflow: hidden;
   border: 2px solid #d0b273;
-  border-radius: 10px;
+  border-radius: 9px;
   background: #fff8e8;
   color: #241b10;
   box-shadow: 0 5px 9px #0007;
+  transition: transform .14s, opacity .14s, box-shadow .14s;
+}
+
+#cardsArea .play-card:not(:disabled):active {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 12px #0008;
 }
 
 #cardsArea .play-card img {
@@ -661,106 +849,115 @@ h1 span { color: var(--gold); }
   border-radius: 4px;
 }
 
-#cardsArea .play-card .helper {
-  position: static;
-  margin: 0;
-  color: #75664e;
-  font-size: 9px;
-  text-align: center;
+#cardsArea .play-card:disabled,
+#cardsArea .play-card.card-played {
+  opacity: .36;
+  filter: grayscale(.65);
+  transform: translateY(3px);
 }
 
-#cardsArea .play-card:disabled {
-  opacity: .38;
-  filter: grayscale(.5);
-}
-
-#cardsArea #machineCardsArea > div {
-  flex: 0 0 25%;
-  min-width: 0;
-  min-height: 0;
-  padding: 5px !important;
-  border: 1px solid #b18a53;
-  border-radius: 8px;
-  background: rgba(27,18,12,.65);
-  color: #f8e6be;
-  text-align: center;
-}
-
-#cardsArea #machineCardsArea img {
-  display: block;
-  width: 100%;
-  height: auto;
-  max-height: 135px;
-  object-fit: contain;
-}
-
-#cardsArea #tableArea {
-  display: grid;
-  grid-template-columns: repeat(2,minmax(0,1fr));
-  gap: 8px;
-  padding: 10px;
-  min-height: 100px;
-  border: 1px solid #b18a53;
-  border-radius: 12px;
-  background: rgba(25,15,9,.58);
-}
-
-#cardsArea #tableArea .detail-panel {
-  min-width: 0;
-  padding: 7px;
-  border: 1px solid #c5a56d;
-  border-radius: 8px;
-  background: #fff8e8;
+#cardsArea .card-fallback {
+  padding: 12px 3px;
   color: #241b10;
+  font-size: 11px;
   text-align: center;
 }
 
-#cardsArea #tableArea img {
-  display: block;
-  width: 100%;
-  max-width: 115px;
-  height: auto;
-  max-height: 150px;
-  object-fit: contain;
-  margin: auto;
-}
+/* Resultado de ronda y mano */
 
-#cardsArea #tableArea .helper {
-  color: #75664e;
-  font-size: 10px;
-}
-
-#cardsArea #roundResult {
-  padding: 8px;
-  border-radius: 8px;
-  background: #25190f99;
+#cardsArea .round-result {
+  margin: 7px 0;
+  padding: 10px 7px;
+  border: 1px solid rgba(209,176,108,.35);
+  border-radius: 9px;
   color: #f5dfad;
+  background: #25190f99;
+  font-size: 12px;
   text-align: center;
 }
 
-#cardsArea #handResult .detail-panel {
-  padding: 12px;
-  border-color: #d1b06c;
-  background: #25190fdd;
+#cardsArea .hand-result-panel {
+  margin-top: 10px;
+  padding: 13px 10px;
+  border: 1px solid #d1b06c;
+  border-radius: 11px;
   color: #fff0ce;
+  background: #25190fdd;
   text-align: center;
 }
 
-#detailScreen:has(#cardsArea) #machineGameStatus {
-  margin: 8px 0;
-  color: #ffe9bc;
-  text-align: center;
+#cardsArea .hand-result-panel h3 {
+  color: var(--gold-light);
 }
 
-#detailScreen:has(#cardsArea) #dealCardsButton,
-#detailScreen:has(#cardsArea) #newDealButton,
-#detailScreen:has(#cardsArea) #newMatchButton {
+#detailScreen:has(.machine-game) #dealCardsButton,
+#detailScreen:has(.machine-game) #newDealButton,
+#detailScreen:has(.machine-game) #newMatchButton {
   margin-top: 10px;
 }
 
+/* Ajustes para celulares pequeños */
+
 @media (max-width: 380px) {
-  #detailScreen:has(#cardsArea) #detailContent { padding: 8px; }
-  #detailScreen:has(#cardsArea) #detailContent > .detail-panel { padding: 8px; }
-  #cardsArea .play-card img { max-height: 155px; }
-  #cardsArea #machineCardsArea img { max-height: 115px; }
+  .app-shell {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .mode-grid {
+    gap: 6px;
+  }
+
+  .mode-card {
+    padding: 12px 7px;
+  }
+
+  .mode-title {
+    font-size: 11px;
+  }
+
+  .mode-subtitle {
+    font-size: 9px;
+  }
+
+  .score-team {
+    padding: 12px 6px;
+  }
+
+  .score-number {
+    font-size: 38px;
+  }
+
+  .matchsticks {
+    gap: 10px 2px;
+  }
+
+  #detailScreen:has(.machine-game) #detailContent {
+    padding: 7px;
+  }
+
+  .machine-game {
+    padding: 8px;
+  }
+
+  #cardsArea .table-play {
+    min-height: 115px;
+    gap: 9px;
+  }
+
+  #cardsArea .played-card {
+    padding: 4px;
+  }
+
+  #cardsArea .played-card img {
+    max-height: 120px;
+  }
+
+  #cardsArea .play-card img {
+    max-height: 155px;
+  }
+
+  #cardsArea .machine-cards {
+    gap: 7px;
+  }
 }
