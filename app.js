@@ -1,3 +1,4 @@
+
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => [...document.querySelectorAll(selector)];
 
@@ -10,8 +11,7 @@ const toast = $("#toast");
 let selectedMode = "2 vs 2";
 let toastTimer;
 
-// Turno inicial persistente:
-// 1 = jugador; -1 = máquina.
+// 1 = empieza el jugador; -1 = empieza la máquina.
 let empiezaPrimeraMano =
   localStorage.getItem("trucoEmpieza") === "-1" ? -1 : 1;
 
@@ -85,7 +85,6 @@ function escapeHtml(text) {
 
 function createRoom() {
   selectedMode = "2 vs 2";
-
   showDetail(
     "SALA PRIVADA",
     "Creá tu mesa",
@@ -117,7 +116,6 @@ function createRoom() {
     }
 
     const code = makeRoomCode();
-
     $("#roomResult").innerHTML = `
       <div class="room-code">${code}</div>
       <p class="helper">
@@ -190,7 +188,6 @@ function joinRoom() {
 
 function publicMatch() {
   selectedMode = "2 vs 2";
-
   showDetail(
     "PARTIDA PÚBLICA",
     "Buscá una mesa",
@@ -224,7 +221,6 @@ function publicMatch() {
 $$("[data-mode]").forEach(button => {
   button.addEventListener("click", () => {
     selectedMode = button.dataset.mode;
-
     showDetail(
       "MODO DE JUEGO",
       selectedMode,
@@ -239,7 +235,6 @@ $$("[data-mode]").forEach(button => {
         <button class="secondary-button" id="publicWithMode">Buscar partida pública</button>
       `
     );
-
     $("#privateWithMode").addEventListener("click", createRoom);
     $("#publicWithMode").addEventListener("click", publicMatch);
   });
@@ -269,7 +264,6 @@ function imagenCarta(carta) {
     Oro: "oro",
     Copa: "copa"
   };
-
   const nombres = {
     1: "1", 2: "2", 3: "3", 4: "4", 5: "5",
     6: "6", 7: "7", 10: "sota", 11: "caballo", 12: "rey"
@@ -335,13 +329,10 @@ function startMachineGame() {
               <div class="score-number" id="machineOpponentScore">${game.ellos}</div>
             </section>
           </div>
-
           <p class="helper" id="machineGameStatus">Prepará la próxima mano.</p>
-
           <button class="primary-button" id="dealCardsButton">
             Repartir cartas
           </button>
-
           <div id="cardsArea"></div>
         </div>
       `
@@ -372,11 +363,10 @@ function startMachineGame() {
     const jugador = baraja.slice(0, 3);
     const maquina = baraja.slice(3, 6);
     const resultados = [];
-
     let ronda = 0;
     let terminada = false;
 
-    // El turno inicial se toma del valor persistente.
+    // Cada mano toma el turno que quedó guardado de la mano anterior.
     let empieza = empiezaPrimeraMano;
 
     $("#dealCardsButton").hidden = true;
@@ -390,14 +380,12 @@ function startMachineGame() {
           `).join("")}
         </div>
       </section>
-
       <section class="table-center">
         <h3>LA MESA</h3>
         <div class="table-play" id="tableArea">
           <p class="helper">Preparando la mano...</p>
         </div>
       </section>
-
       <section class="table-player">
         <h3>TUS CARTAS</h3>
         <div class="player-cards" id="playerCardsArea">
@@ -411,10 +399,8 @@ function startMachineGame() {
           `).join("")}
         </div>
       </section>
-
       <p class="round-result" id="roundResult">Ronda 1 de 3.</p>
       <div id="handResult"></div>
-
       <button class="primary-button" id="newDealButton" hidden>
         Repartir otra mano
       </button>
@@ -470,7 +456,6 @@ function startMachineGame() {
         revelarCartaMaquina(ronda);
 
         const carta = maquina[ronda];
-
         $("#tableArea").innerHTML = `
           <div class="played-card">
             <span class="played-by">MÁQUINA · ABRE</span>
@@ -525,7 +510,7 @@ function startMachineGame() {
         `Ronda ${ronda + 1} de 3: ${resultadoTexto}`;
 
       // El ganador de la ronda abre la siguiente.
-      // Si empatan, mantiene la salida quien ya había abierto.
+      // En empate, sigue quien había abierto.
       if (resultado === 1) empieza = 1;
       if (resultado === -1) empieza = -1;
 
@@ -550,7 +535,8 @@ function startMachineGame() {
         $("#machinePlayerScore").textContent = game.nosotros;
         $("#machineOpponentScore").textContent = game.ellos;
 
-        const partidaCompleta = game.nosotros >= 30 || game.ellos >= 30;
+        const partidaCompleta =
+          game.nosotros >= 30 || game.ellos >= 30;
 
         $("#handResult").innerHTML = `
           <div class="hand-result-panel">
@@ -566,6 +552,11 @@ function startMachineGame() {
 
         $("#machineGameStatus").textContent = "Mano terminada.";
         botones.forEach(b => { b.disabled = true; });
+
+        // CORRECCIÓN: alternar al finalizar CADA mano,
+        // no solamente al terminar una partida completa.
+        empiezaPrimeraMano = empiezaPrimeraMano === 1 ? -1 : 1;
+        localStorage.setItem("trucoEmpieza", String(empiezaPrimeraMano));
 
         $("#newDealButton").hidden = partidaCompleta;
         $("#newMatchButton").hidden = !partidaCompleta;
@@ -586,15 +577,7 @@ function startMachineGame() {
       game.nosotros = 0;
       game.ellos = 0;
 
-      // Alterna quién empieza la próxima partida.
-      empiezaPrimeraMano *= -1;
-
-      // Guarda el turno para que no se pierda al recargar.
-      localStorage.setItem(
-        "trucoEmpieza",
-        String(empiezaPrimeraMano)
-      );
-
+      // No alternar acá: el turno ya cambió al finalizar la última mano.
       renderGame();
     });
 
@@ -663,12 +646,10 @@ function openScoreboard() {
           </section>
         `).join("")}
       </div>
-
       ${scores.nosotros === 30 || scores.ellos === 30
         ? `<div class="score-finished">
             ¡Ganó ${scores.nosotros === 30 ? "NOSOTROS" : "ELLOS"}!
           </div>` : ""}
-
       <button class="secondary-button score-reset" id="resetScore">
         Reiniciar partido
       </button>
