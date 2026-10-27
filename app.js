@@ -370,10 +370,9 @@ function startMachineGame() {
 
     let ronda = 0;
     let terminada = false;
+    let empieza = 1;
 
     $("#dealCardsButton").hidden = true;
-    $("#machineGameStatus").textContent =
-      "Elegí una carta para jugar la primera ronda.";
 
     $("#cardsArea").innerHTML = `
       <section class="table-opponent">
@@ -388,7 +387,7 @@ function startMachineGame() {
       <section class="table-center">
         <h3>LA MESA</h3>
         <div class="table-play" id="tableArea">
-          <p class="helper">Elegí una carta para comenzar.</p>
+          <p class="helper">Vos abrís la primera ronda.</p>
         </div>
       </section>
 
@@ -419,102 +418,158 @@ function startMachineGame() {
 
     const botones = $$("#playerCardsArea .play-card");
 
+    function revelarCartaMaquina(indice) {
+      const carta = maquina[indice];
+      const elemento = $("#machineCardsArea").children[indice];
+
+      elemento.innerHTML = `
+        <img src="${imagenCarta(carta)}"
+          alt="${escapeHtml(nombreCarta(carta))}"
+          onerror="this.outerHTML='<span class=&quot;card-fallback&quot;>${escapeHtml(nombreCarta(carta))}</span>'">
+      `;
+      elemento.classList.add("card-revealed");
+    }
+
+    function mostrarMesa(cartaJugador, cartaMaquina, resultado, maquinaAbre) {
+      const jugadaJugador = `
+        <div class="played-card ${resultado === 1 ? "round-winner" : ""}">
+          <span class="played-by">VOS</span>
+          <img src="${imagenCarta(cartaJugador)}"
+            alt="${escapeHtml(nombreCarta(cartaJugador))}"
+            onerror="this.style.display='none';this.nextElementSibling.hidden=false">
+          <span class="card-fallback" hidden>${escapeHtml(nombreCarta(cartaJugador))}</span>
+          <span class="played-name">${escapeHtml(nombreCarta(cartaJugador))}</span>
+        </div>
+      `;
+
+      const jugadaMaquina = `
+        <div class="played-card ${resultado === -1 ? "round-winner" : ""}">
+          <span class="played-by">${maquinaAbre ? "MÁQUINA · ABRE" : "MÁQUINA"}</span>
+          <img src="${imagenCarta(cartaMaquina)}"
+            alt="${escapeHtml(nombreCarta(cartaMaquina))}"
+            onerror="this.style.display='none';this.nextElementSibling.hidden=false">
+          <span class="card-fallback" hidden>${escapeHtml(nombreCarta(cartaMaquina))}</span>
+          <span class="played-name">${escapeHtml(nombreCarta(cartaMaquina))}</span>
+        </div>
+      `;
+
+      $("#tableArea").innerHTML = maquinaAbre
+        ? jugadaMaquina + jugadaJugador
+        : jugadaJugador + jugadaMaquina;
+    }
+
+    function prepararRonda() {
+      if (empieza === -1) {
+        revelarCartaMaquina(ronda);
+
+        const carta = maquina[ronda];
+
+        $("#tableArea").innerHTML = `
+          <div class="played-card">
+            <span class="played-by">MÁQUINA · ABRE</span>
+            <img src="${imagenCarta(carta)}"
+              alt="${escapeHtml(nombreCarta(carta))}"
+              onerror="this.style.display='none';this.nextElementSibling.hidden=false">
+            <span class="card-fallback" hidden>${escapeHtml(nombreCarta(carta))}</span>
+            <span class="played-name">${escapeHtml(nombreCarta(carta))}</span>
+          </div>
+          <p class="helper">La máquina abrió. Elegí tu carta para responder.</p>
+        `;
+
+        $("#machineGameStatus").textContent =
+          `Ronda ${ronda + 1}: empieza la máquina. Ahora te toca responder.`;
+      } else {
+        $("#tableArea").innerHTML =
+          '<p class="helper">Vos abrís la ronda. Elegí una carta.</p>';
+
+        $("#machineGameStatus").textContent =
+          `Ronda ${ronda + 1}: empezás vos. Elegí una carta.`;
+      }
+    }
+
+    function jugarCarta(indice) {
+      if (terminada || botones[indice].disabled) return;
+
+      const cartaJugador = jugador[indice];
+      if (!cartaJugador) return;
+
+      const cartaMaquina = maquina[ronda];
+      const maquinaAbre = empieza === -1;
+      const resultado = resultadoRonda(cartaJugador, cartaMaquina);
+
+      resultados.push(resultado);
+
+      jugador[indice] = null;
+      botones[indice].disabled = true;
+      botones[indice].classList.add("card-played");
+
+      if (!maquinaAbre) {
+        revelarCartaMaquina(ronda);
+      }
+
+      mostrarMesa(cartaJugador, cartaMaquina, resultado, maquinaAbre);
+
+      const resultadoTexto =
+        resultado === 1 ? "Ganaste esta ronda." :
+        resultado === -1 ? "La máquina ganó esta ronda." :
+        "Ronda empatada.";
+
+      $("#roundResult").textContent =
+        `Ronda ${ronda + 1} de 3: ${resultadoTexto}`;
+
+      // El ganador de la ronda abre la siguiente.
+      // Si hay empate, mantiene la salida quien ya había abierto.
+      if (resultado === 1) empieza = 1;
+      if (resultado === -1) empieza = -1;
+
+      ronda++;
+
+      if (ronda >= 3) {
+        terminada = true;
+
+        const ganador = ganadorMano(resultados);
+        let mensaje;
+
+        if (ganador === 1) {
+          game.nosotros = Math.min(30, game.nosotros + 1);
+          mensaje = "¡Ganaste la mano! Sumás 1 punto.";
+        } else if (ganador === -1) {
+          game.ellos = Math.min(30, game.ellos + 1);
+          mensaje = "La máquina ganó la mano. Suma 1 punto.";
+        } else {
+          mensaje = "La mano terminó empatada. Nadie suma puntos.";
+        }
+
+        $("#machinePlayerScore").textContent = game.nosotros;
+        $("#machineOpponentScore").textContent = game.ellos;
+
+        const partidaCompleta = game.nosotros >= 30 || game.ellos >= 30;
+
+        $("#handResult").innerHTML = `
+          <div class="hand-result-panel">
+            <strong>${mensaje}</strong>
+            <p class="helper">
+              Resultado: Vos ${game.nosotros} — Máquina ${game.ellos}
+            </p>
+            ${partidaCompleta ? `
+              <h3>¡${game.nosotros >= 30 ? "Ganaste" : "La máquina ganó"} la partida!</h3>
+            ` : ""}
+          </div>
+        `;
+
+        $("#machineGameStatus").textContent = "Mano terminada.";
+        botones.forEach(b => { b.disabled = true; });
+
+        $("#newDealButton").hidden = partidaCompleta;
+        $("#newMatchButton").hidden = !partidaCompleta;
+      } else {
+        prepararRonda();
+      }
+    }
+
     botones.forEach(boton => {
       boton.addEventListener("click", () => {
-        if (terminada || boton.disabled) return;
-
-        const indice = Number(boton.dataset.card);
-        const cartaJugador = jugador[indice];
-        const cartaMaquina = maquina[ronda];
-
-        if (!cartaJugador || !cartaMaquina) return;
-
-        const resultado = resultadoRonda(cartaJugador, cartaMaquina);
-        resultados.push(resultado);
-
-        // Marcar la carta como usada.
-        jugador[indice] = null;
-        boton.disabled = true;
-        boton.classList.add("card-played");
-
-        // Revelar la carta de la máquina.
-        const machineCard = $("#machineCardsArea").children[ronda];
-        machineCard.innerHTML = `
-          <img src="${imagenCarta(cartaMaquina)}" alt="${escapeHtml(nombreCarta(cartaMaquina))}"
-            onerror="this.outerHTML='<span class=&quot;card-fallback&quot;>${escapeHtml(nombreCarta(cartaMaquina))}</span>'">
-        `;
-        machineCard.classList.add("card-revealed");
-
-        // El centro muestra únicamente la jugada actual.
-        $("#tableArea").innerHTML = `
-          <div class="played-card ${resultado === 1 ? "round-winner" : ""}">
-            <span class="played-by">VOS</span>
-            <img src="${imagenCarta(cartaJugador)}" alt="${escapeHtml(nombreCarta(cartaJugador))}"
-              onerror="this.style.display='none';this.nextElementSibling.hidden=false">
-            <span class="card-fallback" hidden>${escapeHtml(nombreCarta(cartaJugador))}</span>
-            <span class="played-name">${escapeHtml(nombreCarta(cartaJugador))}</span>
-          </div>
-          <div class="played-card ${resultado === -1 ? "round-winner" : ""}">
-            <span class="played-by">MÁQUINA</span>
-            <img src="${imagenCarta(cartaMaquina)}" alt="${escapeHtml(nombreCarta(cartaMaquina))}"
-              onerror="this.style.display='none';this.nextElementSibling.hidden=false">
-            <span class="card-fallback" hidden>${escapeHtml(nombreCarta(cartaMaquina))}</span>
-            <span class="played-name">${escapeHtml(nombreCarta(cartaMaquina))}</span>
-          </div>
-        `;
-
-        const resultadoTexto =
-          resultado === 1 ? "Ganaste esta ronda." :
-          resultado === -1 ? "La máquina ganó esta ronda." :
-          "Ronda empatada.";
-
-        $("#roundResult").textContent =
-          `Ronda ${ronda + 1} de 3: ${resultadoTexto}`;
-
-        ronda++;
-
-        if (ronda >= 3) {
-          terminada = true;
-
-          const ganador = ganadorMano(resultados);
-          let mensaje;
-
-          if (ganador === 1) {
-            game.nosotros = Math.min(30, game.nosotros + 1);
-            mensaje = "¡Ganaste la mano! Sumás 1 punto.";
-          } else if (ganador === -1) {
-            game.ellos = Math.min(30, game.ellos + 1);
-            mensaje = "La máquina ganó la mano. Suma 1 punto.";
-          } else {
-            mensaje = "La mano terminó empatada. Nadie suma puntos.";
-          }
-
-          $("#machinePlayerScore").textContent = game.nosotros;
-          $("#machineOpponentScore").textContent = game.ellos;
-
-          const partidaCompleta = game.nosotros >= 30 || game.ellos >= 30;
-
-          $("#handResult").innerHTML = `
-            <div class="hand-result-panel">
-              <strong>${mensaje}</strong>
-              <p class="helper">
-                Resultado: Vos ${game.nosotros} — Máquina ${game.ellos}
-              </p>
-              ${partidaCompleta ? `
-                <h3>¡${game.nosotros >= 30 ? "Ganaste" : "La máquina ganó"} la partida!</h3>
-              ` : ""}
-            </div>
-          `;
-
-          $("#machineGameStatus").textContent = "Mano terminada.";
-          botones.forEach(b => { b.disabled = true; });
-
-          $("#newDealButton").hidden = partidaCompleta;
-          $("#newMatchButton").hidden = !partidaCompleta;
-        } else {
-          $("#machineGameStatus").textContent =
-            `Ronda ${ronda + 1}: elegí otra carta.`;
-        }
+        jugarCarta(Number(boton.dataset.card));
       });
     });
 
@@ -525,6 +580,8 @@ function startMachineGame() {
       game.ellos = 0;
       renderGame();
     });
+
+    prepararRonda();
   }
 
   renderGame();
