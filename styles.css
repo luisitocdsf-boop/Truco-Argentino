@@ -961,3 +961,309 @@ h1 span {
     gap: 7px;
   }
 }
+/* =========================================
+   NUEVO DISEÑO DE LA PARTIDA
+   Mesa negra, detalles dorados y cartas en abanico
+========================================= */
+
+/* Ocultar el encabezado general y la navegación durante la partida */
+body:has(.machine-game) .topbar,
+body:has(.machine-game) .bottom-nav {
+  display: none !important;
+}
+
+/* La pantalla de juego ocupa todo el espacio */
+body:has(.machine-game) .app-shell {
+  width: 100%;
+  max-width: 560px;
+  min-height: 100vh;
+  padding: max(8px, env(safe-area-inset-top)) 10px
+    calc(12px + env(safe-area-inset-bottom));
+}
+
+#detailScreen:has(.machine-game) {
+  min-height: 100vh;
+  position: relative;
+  padding-top: 30px;
+}
+
+/* Volver queda pequeño y discreto */
+#detailScreen:has(.machine-game) .back-link {
+  position: absolute;
+  z-index: 5;
+  top: 0;
+  left: 8px;
+  padding: 5px 8px;
+  color: #d9b96c;
+  font-size: 11px;
+  opacity: .8;
+}
+
+/* Sacar los títulos y textos que ocupaban espacio */
+#detailScreen:has(.machine-game) .intro {
+  display: none !important;
+}
+
+/* Marco exterior negro con borde dorado */
+#detailScreen:has(.machine-game) #detailContent {
+  min-height: calc(100vh - 42px);
+  padding: 9px;
+  border: 2px solid #94723b;
+  border-radius: 19px;
+  background:
+    linear-gradient(135deg, #28231b, #090909 45%, #1c1710);
+  box-shadow:
+    inset 0 0 0 2px #17120b,
+    inset 0 0 0 4px #594323,
+    0 8px 28px #000b;
+}
+
+/* Superficie principal de la mesa */
+.machine-game {
+  min-height: calc(100vh - 65px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 12px 9px 15px;
+  border: 1px solid rgba(217,185,108,.65);
+  border-radius: 13px;
+  background:
+    radial-gradient(ellipse at 50% 48%, #25251f 0%, #11110f 55%, #080808 100%);
+  box-shadow:
+    inset 0 0 35px #000,
+    inset 0 0 0 2px #ffffff08;
+}
+
+/* Marcador único en la parte superior */
+.machine-game .scoreboard {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+  margin: 0 0 8px;
+}
+
+.machine-game .score-team {
+  padding: 8px 5px;
+  border: 1px solid #9c7b42;
+  border-radius: 9px;
+  background: linear-gradient(145deg, #29241a, #11100d);
+  box-shadow: inset 0 0 12px #0008;
+}
+
+.machine-game .score-team h3 {
+  color: #f0d995;
+  font-size: 10px;
+  letter-spacing: .13em;
+}
+
+.machine-game .score-number {
+  margin: 5px 0 2px;
+  color: #f0d995;
+  font-size: 30px;
+  text-shadow: 0 0 12px #d9b96c55;
+}
+
+/* Estado de la partida */
+#detailScreen:has(.machine-game) #machineGameStatus {
+  margin: 8px 0;
+  color: #e4d2a8;
+  font-size: 12px;
+  text-align: center;
+}
+
+/* Zonas de cartas */
+#cardsArea {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Títulos pequeños */
+#cardsArea h3 {
+  margin: 9px 0 7px;
+  color: #d9b96c;
+  font-size: 10px;
+  letter-spacing: .16em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+/* Cartas de la máquina arriba */
+#cardsArea .machine-cards {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 5px 2px 12px;
+}
+
+#cardsArea .opponent-card {
+  flex: 0 1 22%;
+  max-width: 88px;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  border: 1px solid #c6a45e;
+  border-radius: 7px;
+  background: #302719;
+  box-shadow: 0 5px 12px #000b;
+}
+
+#cardsArea .opponent-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Centro de la mesa */
+#cardsArea .table-center {
+  margin: 5px 0 12px;
+  padding: 12px 8px;
+  border: 1px solid #806638;
+  border-radius: 15px;
+  background:
+    radial-gradient(ellipse at center, #252a23, #11130f 75%);
+  box-shadow:
+    inset 0 0 25px #000b,
+    0 5px 14px #0008;
+}
+
+#cardsArea .table-center h3 {
+  margin-top: 0;
+  color: #d9b96c;
+}
+
+#cardsArea .table-play {
+  min-height: 125px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+}
+
+#cardsArea .played-card {
+  flex: 0 1 36%;
+  max-width: 120px;
+  padding: 5px;
+  border: 1px solid #d9b96c;
+  border-radius: 8px;
+  background: #fff8e8;
+  box-shadow: 0 5px 14px #000b;
+}
+
+#cardsArea .played-card img {
+  width: 100%;
+  max-height: 135px;
+  object-fit: contain;
+}
+
+/* Tus cartas: abanico en la parte inferior */
+#cardsArea .player-cards {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0;
+  padding: 15px 4px 12px;
+  min-height: 205px;
+  perspective: 700px;
+}
+
+#cardsArea .play-card {
+  position: relative;
+  flex: 0 1 31%;
+  width: 31%;
+  max-width: 132px;
+  min-width: 0;
+  padding: 4px;
+  border: 2px solid #c6a45e;
+  border-radius: 9px;
+  background: #fff8e8;
+  box-shadow: 0 8px 16px #000b;
+  transform-origin: center bottom;
+  transition: transform .18s, opacity .18s;
+}
+
+/* Inclinación de las cartas como una mano */
+#cardsArea .play-card:nth-child(1) {
+  transform: translateY(9px) rotate(-11deg);
+  margin-right: -5px;
+}
+
+#cardsArea .play-card:nth-child(2) {
+  transform: translateY(-3px) rotate(0deg);
+  z-index: 2;
+}
+
+#cardsArea .play-card:nth-child(3) {
+  transform: translateY(9px) rotate(11deg);
+  margin-left: -5px;
+}
+
+#cardsArea .play-card:not(:disabled):active {
+  z-index: 4;
+  transform: translateY(-12px) scale(1.04);
+}
+
+#cardsArea .play-card img {
+  display: block;
+  width: 100%;
+  max-height: 175px;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+#cardsArea .play-card:disabled,
+#cardsArea .play-card.card-played {
+  opacity: .35;
+  filter: grayscale(.6);
+}
+
+/* Mensajes y resultado */
+#cardsArea .round-result,
+#cardsArea .hand-result-panel {
+  border: 1px solid #92723e;
+  border-radius: 10px;
+  color: #f0d995;
+  background: #17140f;
+  text-align: center;
+}
+
+#cardsArea .hand-result-panel h3 {
+  color: #f0d995;
+}
+
+/* Botones de la partida */
+#detailScreen:has(.machine-game) #dealCardsButton,
+#detailScreen:has(.machine-game) #newDealButton,
+#detailScreen:has(.machine-game) #newMatchButton {
+  border: 1px solid #d9b96c;
+  border-radius: 10px;
+}
+
+/* Adaptación a celulares pequeños */
+@media (max-width: 380px) {
+  #detailScreen:has(.machine-game) #detailContent {
+    padding: 6px;
+  }
+
+  .machine-game {
+    padding: 9px 6px;
+  }
+
+  #cardsArea .player-cards {
+    min-height: 180px;
+    padding-top: 12px;
+  }
+
+  #cardsArea .play-card img {
+    max-height: 150px;
+  }
+
+  #cardsArea .table-play {
+    min-height: 105px;
+  }
+
+  #cardsArea .played-card img {
+    max-height: 110px;
+  }
+}
