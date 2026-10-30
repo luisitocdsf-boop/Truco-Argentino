@@ -1267,3 +1267,115 @@ body:has(.machine-game) .app-shell {
     max-height: 110px;
   }
 }
+/* =========================================
+   AJUSTE 2: MARCADOR Y MESA
+========================================= */
+
+/* Fondo negro mate */
+#detailScreen:has(.machine-game) {
+  background: #080808;
+}
+
+#detailScreen:has(.machine-game) #detailContent {
+  background:
+    linear-gradient(145deg, #171717, #080808 55%, #15120c) !important;
+  border: 2px solid #a88749 !important;
+  border-radius: 18px;
+  box-shadow:
+    inset 0 0 0 2px #080808,
+    inset 0 0 0 4px #594323,
+    0 0 25px #000 !important;
+}
+
+/* Mesa negra con brillo sutil */
+.machine-game {
+  background:
+    radial-gradient(ellipse at 50% 45%, #20201d 0%, #11110f 48%, #080808 100%) !important;
+  border: 1px solid #b18a53 !important;
+  border-radius: 13px;
+  box-shadow:
+    inset 0 0 45px #000,
+    inset 0 0 0 2px #ffffff08 !important;
+}
+
+/* Marcador superior: dos lados dentro de una misma placa */
+.machine-game .scoreboard {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 !important;
+  margin: 0 auto 12px !important;
+  width: 100%;
+  max-width: 390px;
+  padding: 5px;
+  border: 1px solid #b89552;
+  border-radius: 12px;
+  background: linear-gradient(145deg, #282319, #0c0c0b);
+  box-shadow:
+    0 4px 15px #000b,
+    inset 0 0 12px #000;
+}
+
+.machine-game .score-team {
+  min-height: 76px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 7px 5px !important;
+  border: 0 !important;
+  border-radius: 7px;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.machine-game .score-team + .score-team {
+  border-left: 1px solid #806638 !important;
+}
+
+.machine-game .score-team h3 {
+  color: #d9b96c !important;
+  font-size: 11px !important;
+  letter-spacing: .18em;
+  text-shadow: 0 1px 5px #000;
+}
+
+.machine-game .score-number {
+  margin: 5px 0 0 !important;
+  color: #f5dfa5 !important;
+  font-size: 36px !important;
+  font-weight: 900;
+  line-height: 1;
+  text-shadow: 0 0 13px #d9b96c66;
+}
+
+/* Quitar las líneas del anotador dentro de la partida */
+.machine-game .matchsticks {
+  display: none !important;
+}
+
+/* Centro de la mesa más oscuro y elegante */
+#cardsArea .table-center {
+  border: 1px solid #a88749 !important;
+  border-radius: 16px;
+  background:
+    radial-gradient(ellipse at center, #24231e 0%, #141410 65%, #090909 100%) !important;
+  box-shadow:
+    inset 0 0 0 2px #ffffff08,
+    inset 0 0 28px #000,
+    0 6px 18px #000b !important;
+}
+
+/* Detalles dorados en los títulos */
+#cardsArea h3,
+#cardsArea .table-center h3 {
+  color: #e4c77e !important;
+  text-shadow: 0 1px 5px #000;
+}
+
+/* Mensajes sobre la mesa */
+#cardsArea .round-result,
+#cardsArea .hand-result-panel {
+  border-color: #a88749 !important;
+  background: linear-gradient(145deg, #211c12, #0b0b0a) !important;
+  color: #f0d995 !important;
+}
