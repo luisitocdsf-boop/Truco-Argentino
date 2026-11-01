@@ -1249,7 +1249,7 @@ body:has(.machine-game) .app-shell {
   .machine-game {
     padding: 9px 6px;
   }
-
+}
 /* =========================================
    PARTIDA CONTRA LA MÁQUINA
    Negro mate, dorado y cartas en abanico
