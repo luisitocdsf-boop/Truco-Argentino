@@ -1250,69 +1250,91 @@ body:has(.machine-game) .app-shell {
     padding: 9px 6px;
   }
 
-  #cardsArea .player-cards {
-    min-height: 180px;
-    padding-top: 12px;
-  }
-
-  #cardsArea .play-card img {
-    max-height: 150px;
-  }
-
-  #cardsArea .table-play {
-    min-height: 105px;
-  }
-
-  #cardsArea .played-card img {
-    max-height: 110px;
-  }
-}
 /* =========================================
-   AJUSTE 2: MARCADOR Y MESA
+   PARTIDA CONTRA LA MÁQUINA
+   Negro mate, dorado y cartas en abanico
 ========================================= */
 
-/* Fondo negro mate */
+/* Pantalla completa durante la partida */
+body:has(.machine-game) .topbar,
+body:has(.machine-game) .bottom-nav {
+  display: none !important;
+}
+
+body:has(.machine-game) .app-shell {
+  width: 100%;
+  max-width: 560px;
+  min-height: 100vh;
+  padding: max(8px, env(safe-area-inset-top)) 10px
+    calc(12px + env(safe-area-inset-bottom));
+}
+
 #detailScreen:has(.machine-game) {
+  min-height: 100vh;
+  position: relative;
+  padding-top: 30px;
   background: #080808;
 }
 
+/* Botón para volver */
+#detailScreen:has(.machine-game) .back-link {
+  position: absolute;
+  z-index: 5;
+  top: 0;
+  left: 8px;
+  padding: 5px 8px;
+  color: #d9b96c;
+  font-size: 11px;
+  opacity: .85;
+}
+
+/* Ocultar títulos generales */
+#detailScreen:has(.machine-game) .intro {
+  display: none !important;
+}
+
+/* Marco exterior */
 #detailScreen:has(.machine-game) #detailContent {
-  background:
-    linear-gradient(145deg, #171717, #080808 55%, #15120c) !important;
-  border: 2px solid #a88749 !important;
+  min-height: calc(100vh - 42px);
+  padding: 9px;
+  border: 2px solid #a88749;
   border-radius: 18px;
+  background: linear-gradient(145deg,#171717,#080808 55%,#15120c);
   box-shadow:
     inset 0 0 0 2px #080808,
     inset 0 0 0 4px #594323,
-    0 0 25px #000 !important;
+    0 0 25px #000;
 }
 
-/* Mesa negra con brillo sutil */
+/* Superficie de juego */
 .machine-game {
-  background:
-    radial-gradient(ellipse at 50% 45%, #20201d 0%, #11110f 48%, #080808 100%) !important;
-  border: 1px solid #b18a53 !important;
+  min-height: calc(100vh - 65px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 12px 9px 15px;
+  border: 1px solid #b18a53;
   border-radius: 13px;
+  background:
+    radial-gradient(ellipse at 50% 45%,#20201d 0%,#11110f 48%,#080808 100%);
   box-shadow:
     inset 0 0 45px #000,
-    inset 0 0 0 2px #ffffff08 !important;
+    inset 0 0 0 2px #ffffff08;
 }
 
-/* Marcador superior: dos lados dentro de una misma placa */
+/* Marcador superior */
 .machine-game .scoreboard {
   display: grid !important;
   grid-template-columns: 1fr 1fr;
   gap: 0 !important;
-  margin: 0 auto 12px !important;
   width: 100%;
   max-width: 390px;
+  margin: 0 auto 12px !important;
   padding: 5px;
   border: 1px solid #b89552;
   border-radius: 12px;
-  background: linear-gradient(145deg, #282319, #0c0c0b);
-  box-shadow:
-    0 4px 15px #000b,
-    inset 0 0 12px #000;
+  background: linear-gradient(145deg,#282319,#0c0c0b);
+  box-shadow: 0 4px 15px #000b,inset 0 0 12px #000;
 }
 
 .machine-game .score-team {
@@ -1321,7 +1343,7 @@ body:has(.machine-game) .app-shell {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 7px 5px !important;
+  padding: 7px 5px;
   border: 0 !important;
   border-radius: 7px;
   background: transparent !important;
@@ -1333,45 +1355,269 @@ body:has(.machine-game) .app-shell {
 }
 
 .machine-game .score-team h3 {
-  color: #d9b96c !important;
-  font-size: 11px !important;
+  color: #d9b96c;
+  font-size: 11px;
   letter-spacing: .18em;
-  text-shadow: 0 1px 5px #000;
 }
 
 .machine-game .score-number {
-  margin: 5px 0 0 !important;
-  color: #f5dfa5 !important;
-  font-size: 36px !important;
+  margin: 5px 0 0;
+  color: #f5dfa5;
+  font-size: 36px;
   font-weight: 900;
   line-height: 1;
   text-shadow: 0 0 13px #d9b96c66;
 }
 
-/* Quitar las líneas del anotador dentro de la partida */
 .machine-game .matchsticks {
   display: none !important;
 }
 
-/* Centro de la mesa más oscuro y elegante */
-#cardsArea .table-center {
-  border: 1px solid #a88749 !important;
-  border-radius: 16px;
-  background:
-    radial-gradient(ellipse at center, #24231e 0%, #141410 65%, #090909 100%) !important;
-  box-shadow:
-    inset 0 0 0 2px #ffffff08,
-    inset 0 0 28px #000,
-    0 6px 18px #000b !important;
+/* Estado de la partida */
+#detailScreen:has(.machine-game) #machineGameStatus {
+  margin: 8px 0;
+  color: #e4d2a8;
+  font-size: 12px;
+  text-align: center;
 }
 
-/* Detalles dorados en los títulos */
-#cardsArea h3,
-#cardsArea .table-center h3 {
-  color: #e4c77e !important;
+/* Zona de cartas */
+#cardsArea {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+#cardsArea h3 {
+  margin: 9px 0 7px;
+  color: #e4c77e;
+  font-size: 10px;
+  letter-spacing: .16em;
+  text-align: center;
+  text-transform: uppercase;
   text-shadow: 0 1px 5px #000;
 }
 
+/* Cartas de la máquina */
+#cardsArea .machine-cards {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 5px 2px 12px;
+}
+
+#cardsArea .opponent-card {
+  display: grid;
+  place-items: center;
+  flex: 0 1 22%;
+  min-width: 0;
+  max-width: 88px;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  border: 1px solid #c6a45e;
+  border-radius: 7px;
+  color: #f0d995;
+  background: #302719;
+  box-shadow: 0 5px 12px #000b;
+}
+
+#cardsArea .opponent-card img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #fff8e8;
+}
+
+/* Centro de la mesa */
+#cardsArea .table-center {
+  margin: 5px 0 12px;
+  padding: 12px 8px;
+  border: 1px solid #a88749;
+  border-radius: 16px;
+  background:
+    radial-gradient(ellipse at center,#24231e 0%,#141410 65%,#090909 100%);
+  box-shadow:
+    inset 0 0 0 2px #ffffff08,
+    inset 0 0 28px #000,
+    0 6px 18px #000b;
+}
+
+#cardsArea .table-center h3 {
+  margin-top: 0;
+}
+
+#cardsArea .table-play {
+  min-height: 125px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+}
+
+#cardsArea .played-card {
+  display: flex;
+  flex: 0 1 36%;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+  max-width: 120px;
+  padding: 5px;
+  border: 1px solid #d9b96c;
+  border-radius: 8px;
+  color: #251b10;
+  background: #fff8e8;
+  box-shadow: 0 5px 14px #000b;
+}
+
+#cardsArea .played-card img {
+  display: block;
+  width: 100%;
+  max-height: 135px;
+  object-fit: contain;
+}
+
+#cardsArea .played-by {
+  margin-bottom: 5px;
+  color: #6c4b27;
+  font-size: 9px;
+  font-weight: 900;
+  text-align: center;
+}
+
+#cardsArea .played-name {
+  margin-top: 5px;
+  color: #5d4b35;
+  font-size: 9px;
+  text-align: center;
+}
+
+/* Tus cartas en abanico */
+#cardsArea .player-cards {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0;
+  min-height: 205px;
+  padding: 15px 4px 12px;
+  perspective: 700px;
+}
+
+#cardsArea .play-card {
+  position: relative;
+  display: flex;
+  flex: 0 1 31%;
+  width: 31%;
+  min-width: 0;
+  max-width: 132px;
+  padding: 4px;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 2px solid #c6a45e;
+  border-radius: 9px;
+  color: #241b10;
+  background: #fff8e8;
+  box-shadow: 0 8px 16px #000b;
+  transform-origin: center bottom;
+  transition: transform .18s,opacity .18s;
+}
+
+#cardsArea .play-card:nth-child(1) {
+  z-index: 1;
+  transform: translateY(9px) rotate(-11deg);
+  margin-right: -5px;
+}
+
+#cardsArea .play-card:nth-child(2) {
+  z-index: 2;
+  transform: translateY(-3px);
+}
+
+#cardsArea .play-card:nth-child(3) {
+  z-index: 1;
+  transform: translateY(9px) rotate(11deg);
+  margin-left: -5px;
+}
+
+#cardsArea .play-card:not(:disabled):active {
+  z-index: 4;
+  transform: translateY(-12px) scale(1.04);
+}
+
+#cardsArea .play-card img {
+  display: block;
+  width: 100%;
+  max-height: 175px;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+#cardsArea .play-card:disabled,
+#cardsArea .play-card.card-played {
+  opacity: .35;
+  filter: grayscale(.6);
+}
+
+/* Mensajes y resultados */
+#cardsArea .round-result,
+#cardsArea .hand-result-panel {
+  margin: 7px 0;
+  padding: 10px;
+  border: 1px solid #a88749;
+  border-radius: 10px;
+  color: #f0d995;
+  background: linear-gradient(145deg,#211c12,#0b0b0a);
+  text-align: center;
+}
+
+#cardsArea .hand-result-panel h3 {
+  color: #f0d995;
+}
+
+/* Botones */
+#detailScreen:has(.machine-game) #dealCardsButton,
+#detailScreen:has(.machine-game) #newDealButton,
+#detailScreen:has(.machine-game) #newMatchButton {
+  margin-top: 10px;
+  border: 1px solid #d9b96c;
+  border-radius: 10px;
+}
+
+/* Celulares pequeños */
+@media (max-width: 380px) {
+  #detailScreen:has(.machine-game) #detailContent {
+    padding: 6px;
+  }
+
+  .machine-game {
+    padding: 9px 6px;
+  }
+
+  #cardsArea .player-cards {
+    min-height: 180px;
+    padding-top: 12px;
+  }
+
+  #cardsArea .play-card img {
+    max-height: 150px;
+  }
+
+  #cardsArea .table-play {
+    min-height: 105px;
+    gap: 9px;
+  }
+
+  #cardsArea .played-card img {
+    max-height: 110px;
+  }
+
+  #cardsArea .machine-cards {
+    gap: 7px;
+  }
+  }
 /* Mensajes sobre la mesa */
 #cardsArea .round-result,
 #cardsArea .hand-result-panel {
